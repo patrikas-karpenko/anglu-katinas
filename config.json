@@ -1,0 +1,12 @@
+{
+  "ollama_url": "http://localhost:11434",
+  "model": "qwen3:8b",
+  "think": false,
+  "temperature": 0.4,
+  "port": 8000,
+  "open_browser": true,
+  "max_level": "B1",
+  "drill_items": 6,
+  "review_items": 2,
+  "chat_turns": 3
+}

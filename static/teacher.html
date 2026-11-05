@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mokytojo ataskaita</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { display: block; padding: 24px; font-size: 15px; }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  h1 { color: var(--pink); font-size: 20px; margin: 0 0 4px; }
+  h2 { color: var(--cyan); font-size: 16px; margin: 26px 0 8px; border-bottom: 1px dashed var(--line); padding-bottom: 4px; }
+  .muted { color: var(--dim); }
+  .pick button { margin: 0 6px 6px 0; }
+  .pick button.on { background: rgba(53,196,228,.15); border-color: var(--cyan); }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { text-align: left; padding: 3px 10px 3px 0; vertical-align: top; }
+  th { color: var(--dim); font-weight: 400; }
+  .bar { color: var(--ok); white-space: pre; }
+  .bar.mid { color: var(--lt); }
+  .bar.low { color: var(--sad); }
+  .alert { color: var(--sad); }
+  .ok { color: var(--ok); }
+  .lvl { color: var(--purple); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mokytojo ataskaita</h1>
+  <div class="muted">Duomenys saugomi tik šiame kompiuteryje (aplanke data/).</div>
+  <h2>Mokiniai</h2>
+  <div class="pick" id="pick"></div>
+  <div id="rep"></div>
+</div>
+<script>
+const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const day = (d) => (d || "").replace("T", " ").slice(0, 16);
+
+async function load() {
+  const list = await (await fetch("/api/students")).json();
+  const pick = document.getElementById("pick");
+  if (!list.length) { pick.innerHTML = '<span class="muted">Dar nėra mokinių.</span>'; return; }
+  list.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.textContent = `${s.name} (${s.level || "?"})` + (s.alerts ? " !" : "");
+    b.onclick = () => { [...pick.children].forEach((x) => x.classList.remove("on")); b.classList.add("on"); show(s.slug); };
+    pick.appendChild(b);
+    if (i === 0) b.click();
+  });
+}
+
+async function show(slug) {
+  const r = await (await fetch("/api/report?name=" + encodeURIComponent(slug))).json();
+  const p = r.profile;
+  let h = `<h2>${esc(p.name)}</h2>
+    <div>Lygis: <span class="lvl">${esc(p.level || "?")}</span> · žvaigždutės: ${p.stars} ·
+      katinas: ${esc(p.cat_name || "-")} · mėgsta: ${esc(p.interests || "-")}</div>`;
+
+  if (p.alerts.length) {
+    h += `<h2 class="alert">Dėmesio (${p.alerts.length})</h2><div class="muted">Ką mokinys parašė ir programa sustabdė.</div><table style="width:auto">`;
+    for (const a of p.alerts.slice().reverse())
+      h += `<tr><td class="muted">${day(a.date)}</td><td class="alert">${esc(a.type)}</td><td>${esc(a.text)}</td></tr>`;
+    h += "</table>";
+  }
+
+  h += `<h2>Temos</h2><table><tr><th>lygis</th><th>tema</th><th>įsisavinimas</th><th>bandymai</th><th>teisingai</th></tr>`;
+  for (const t of r.topics) {
+    const n = Math.round(t.score * 10), cls = t.score >= r.mastered ? "" : t.score >= 0.5 ? " mid" : " low";
+    h += `<tr><td class="lvl">${t.level}</td><td>${esc(t.title)}</td>
+      <td class="bar${cls}">[${"#".repeat(n)}${"-".repeat(10 - n)}] ${Math.round(t.score * 100)}%</td>
+      <td>${t.tries}${!t.tries && t.score ? ' <span class="muted">(pagal testą)</span>' : ""}</td><td>${t.correct}</td></tr>`;
+  }
+  h += "</table>";
+
+  h += `<h2>Pamokos</h2><table><tr><th>data</th><th>tipas</th><th>tema</th><th>iš pirmo karto</th></tr>`;
+  for (const s of p.sessions.slice().reverse())
+    h += `<tr><td class="muted">${day(s.date)}</td><td>${esc(s.type)}</td><td>${esc(s.topic)}</td><td>${s.correct} / ${s.total}</td></tr>`;
+  h += "</table>";
+
+  h += `<h2>Paskutinės klaidos</h2><table><tr><th>data</th><th>užduotis</th><th>atsakė</th><th>teisingai</th></tr>`;
+  for (const m of p.log.slice(-30).reverse())
+    h += `<tr><td class="muted">${day(m.date)}</td><td>${esc(m.q)}</td><td class="alert">${esc(m.ans)}</td><td class="ok">${esc(m.correct)}</td></tr>`;
+  h += "</table>";
+
+  if (p.diagnostic) {
+    h += `<h2>Pradinis testas (${day(p.diagnostic.date)})</h2><table>`;
+    for (const x of p.diagnostic.results)
+      h += `<tr><td class="${x.ok ? "ok" : "alert"}">${x.ok ? "✓" : "✗"}</td><td>${esc(x.q)}</td><td>${esc(x.ans)}</td></tr>`;
+    h += "</table>";
+  }
+  document.getElementById("rep").innerHTML = h;
+}
+load();
+</script>
+</body>
+</html>
