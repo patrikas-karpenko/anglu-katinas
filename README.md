@@ -1,13 +1,14 @@
 # William – anglų kalbos treniruoklis (Project Explore)
 
 Katinas William padeda lietuviams mokiniams treniruoti anglų kalbą. Du kursai pagal *Project Explore 1* ir
-*Project Explore 2* (Oxford): 53 pamokos, žodžiai ir frazės su vertimu į lietuvių kalbą, gramatika paaiškinta
-lietuviškai.
+*Project Explore 2* (Oxford): 53 vadovėlio pamokos, padalytos į trumpas dalis (ne daugiau kaip 8 žodžiai),
+žodžiai ir frazės su vertimu į lietuvių kalbą, gramatika paaiškinta lietuviškai.
 
 ## Kaip vyksta pamoka
 1. Pamokos kortelė: nauji žodžiai ir gramatika (🔊 – paklausyti, kaip skamba).
 2. William trumpai lietuviškai pristato pamoką.
-3. Pratimai: žodžiai, frazės, „įrašyk, kas trūksta“, sakinių vertimas, diktantas.
+3. Pratimai: du žodžiai → sakinys su jais → dar du žodžiai → sakinys … , tada „įrašyk, kas trūksta“
+   ir sakinio vertimas. Kartais vietoj žodžio – diktantas.
    Atsakymus tikrina programa: žodžius, didžiąsias raides, skyrybos ženklus ir apostrofus.
    Jei klaida tikra (pvz., *like / likes*), William lietuviškai paaiškina kodėl.
 4. Mygtukai: 💡 Užuomina, 🤷 Nežinau, 🔊 Klausyti.

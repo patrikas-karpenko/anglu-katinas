@@ -2,6 +2,39 @@
 
 Newest changes first. "Still to do" at the bottom is the plan for what comes next.
 
+## 2026-11-10 (later) – Fix: hint / "Nežinau" buttons seemed stuck
+- After a mistake (while the student copies the right answer) both buttons did nothing. Now 💡 shows
+  the answer again, and 🤷 shows it once more and moves on to the next exercise.
+- In the short pause between exercises, the buttons (and Enter) acted on the next, not-yet-shown
+  question. They now wait until it appears.
+- "Nežinau" on a sentence step when William had no example skipped silently. Now he says "Gerai,
+  einame toliau." first.
+
+## 2026-11-10 (afternoon) – Smaller word lists, word → sentence drills
+**Smaller word lists**
+- Every book lesson with more than 8 words is split into parts of at most 8. For example, 3A (36
+  words) is now 5 parts.
+- Book 1 has 70 parts and book 2 has 58. No book words were dropped.
+- Each part keeps the lesson's grammar.
+- In the lesson menu, the parts are grouped under their book lesson ("3A · Wild animals · Laukiniai
+  gyvūnai" → "Laukiniai gyvūnai 1/5"). Set the size with `MAX_WORDS` in `tools/build_pe.py`.
+
+**Words, then a sentence**
+- A round now goes: word, word → **make a sentence with them**, word, word → sentence, … then 2
+  fill-in-the-gap exercises and 1 translation for the grammar.
+- One of the word drills is sometimes a dictation instead.
+- The sentence step ("Dabar sudaryk sakinį su žodžiu „elephant“ arba „giraffe“") shows the lesson's
+  grammar pattern.
+- The code checks the sentence: the lesson word is there (any form: elephants, dancing), at least 3
+  words, a capital letter, end punctuation and apostrophes.
+- William checks the grammar. If it's wrong, he gives the corrected sentence and why (in
+  Lithuanian), and the student copies it. A sentence that isn't OK for school gets "try again".
+- On the sentence step:
+  - 💡 shows the pattern and sentence starters ("I like … / I can see … / This is …").
+  - 🤷 Nežinau gives an example sentence from William to copy.
+- Teacher settings: a new on/off for "Sakinių kūrimas su žodžiais", and the exercise number is now
+  the most per round (default 15).
+
 ## 2026-11-10 – Drills, code-checked answers, teacher settings, reading aloud
 
 **Drill-focused lessons (new default)**

@@ -36,6 +36,12 @@ UI = {
     "q_word": "Kaip angliškai „{lt}“?", "q_phrase": "Kaip pasakyti angliškai: „{lt}“",
     "q_fill": "Įrašyk, kas trūksta:", "q_translate": "Išversk į anglų kalbą:",
     "q_listen": "Klausyk ir parašyk, ką girdi.",
+    "q_sentence": "Dabar sudaryk sakinį su žodžiu {w}.", "or": "arba",
+    "q_sentence_pattern": "Gali naudoti: {p}",
+    "sentence_starters": "Gali pradėti taip: I like … / I can see … / This is … / My … is …",
+    "missing_word": "Sakinyje turi būti žodis {w}.", "too_short": "Parašyk visą sakinį – bent 3 žodžius.",
+    "not_for_lesson": "Parašykime kitą sakinį – apie pamokos žodžius.",
+    "example": "Pavyzdžiui: {a}", "skip": "Gerai, einame toliau.",
     "exercise": "Pratimas", "review": "Dar kartą tie, kurie nepavyko:",
     "praise": ["Puiku!", "Teisingai!", "Šaunu!", "Labai gerai!", "Taip!"],
     "also_right": "Taip pat galima: {a}", "inner_punct": "Nepamiršk skyrybos ženklų: {a}",
@@ -51,6 +57,7 @@ UI = {
     "is_question": "Tai klausimas – gale reikia klaustuko (?).",
     "not_question": "Tai ne klausimas – gale reikia taško (.).",
     "apostrophe": "Trūksta apostrofo: {w}.",
+    "end_mark": "Sakinio gale reikia taško (.) arba klaustuko (?).",
     "round_done": "Pratimai baigti! Iš pirmo karto teisingai: {n} iš {total}.", "again": "Dar kartą",
     "dont_know": "Nežinau", "hint": "Užuomina", "listen": "Klausyti", "teacher": "Mokytojui",
     "focus_on": "Mokytojo tema: {f}",
@@ -58,7 +65,8 @@ UI = {
     "t_title": "Mokytojo nustatymai", "t_mode": "Režimas", "t_drill": "Pratimai",
     "t_chat": "Pokalbis su Williamu", "t_types": "Pratimų tipai", "t_word": "Žodžiai ir frazės",
     "t_fill": "Užpildyk tarpą", "t_translate": "Sakinių vertimas", "t_listen": "Klausymas (diktantas)",
-    "t_count": "Pratimų skaičius", "t_strict": "Tikrinti didžiąsias raides ir skyrybą",
+    "t_sentence": "Sakinių kūrimas su žodžiais",
+    "t_count": "Daugiausia pratimų", "t_strict": "Tikrinti didžiąsias raides ir skyrybą",
     "t_speak": "Ištarti teisingą atsakymą balsu", "t_focus": "Nurodymas Williamui (nebūtina)",
     "t_focus_ph": "Pvz.: spalvos su present simple", "t_save": "Išsaugoti", "t_cancel": "Atšaukti",
 }
@@ -139,13 +147,32 @@ def course(cid, name, book, lessons):
                   "Lithuanian meanings and explanations written for this app.",
         "practice_links": [], "lessons": [],
     }
-    for i, (code, title, title_lt, gids, block) in enumerate(lessons, 1):
-        c["lessons"].append({"id": i, "title": f"{code} · {title}", "title_learner": title_lt,
-                             "words": parse_words(block), "grammar": [grammar(g) for g in gids]})
+    n = 0
+    for code, title, title_lt, gids, block in lessons:
+        # Long word lists are split into parts of at most MAX_WORDS words (8 words -> 1 part, 9 -> 2 parts)
+        words = parse_words(block)
+        parts = -(-len(words) // MAX_WORDS)                 # round up
+        size = -(-len(words) // parts)
+        for p in range(parts):
+            n += 1
+            label = f" ({p + 1}/{parts})" if parts > 1 else ""
+            c["lessons"].append({
+                "id": n,
+                "group": f"{code} · {title} · {title_lt}",   # the menu shows the parts under this heading
+                "title": f"{code}{label} · {title}",
+                "title_learner": title_lt,
+                "part": f"{p + 1}/{parts}" if parts > 1 else "",
+                "words": words[p * size:(p + 1) * size],
+                "grammar": [grammar(g) for g in gids],
+            })
     path = f"{out}/{cid}.json"
     json.dump(c, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(path, len(c["lessons"]), "lessons,", sum(len(l["words"]) for l in c["lessons"]), "words,",
-          sum(len(l["grammar"]) for l in c["lessons"]), "grammar points")
+    print(path, len(lessons), "book lessons ->", len(c["lessons"]), "parts,",
+          sum(len(l["words"]) for l in c["lessons"]), "words, longest part:",
+          max(len(l["words"]) for l in c["lessons"]), "words")
+
+
+MAX_WORDS = 8
 
 
 course("project-explore-1", "Project Explore 1", "Project Explore 1", pe1.LESSONS)

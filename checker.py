@@ -222,3 +222,55 @@ def check(item, answer, strict=True):
             out.update(result="spelling", word=target)
             return out
     return out
+
+
+# ---- the student's own sentence ("Dabar sudaryk sakinį su žodžiu ...") ----------------
+# The code checks what it can: is the word there, is it a whole sentence, capitals, punctuation.
+# Whether the grammar is right is decided by William (app.py), because every sentence is different.
+SKIP = {"a", "an", "the", "to"}
+
+
+def same_word(a, b):
+    """elephant = elephants, dance = dancing, big = bigger: the same word in another form."""
+    return a == b or any(s1 == s2 for s1, _ in stems(a) for s2, _ in stems(b))
+
+
+def has_word(answer_words, text):
+    """Is the lesson word (or a form of it) in the student's sentence? 'child – children' = either one."""
+    for option in text.split(" – "):
+        need = [w for w in content(option)[0] if w not in SKIP] or content(option)[0]
+        if need and all(any(same_word(a, n) for a in answer_words) for n in need):
+            return True
+    return False
+
+
+def check_sentence(item, answer, strict=True):
+    """Returns {"result": ok | short | missing | form, "issues", "notes", "word"} – before William looks at it."""
+    answer = (answer or "").strip()
+    words, missing = content(answer)
+    out = {"result": "ok", "issues": [], "notes": [], "word": ""}
+    if len(words) < 3:
+        out["result"] = "short"
+        return out
+    if not any(has_word(words, w) for w in item["words"]):
+        out.update(result="missing", word=" / ".join(f"„{w}“" for w in item["words"]))
+        return out
+    if strict:
+        issues = out["issues"]
+        first = next((c for c in answer if c.isalpha()), "")
+        if first.islower():
+            issues.append({"code": "start_capital"})
+        if any(w == "i" or w.startswith("i'") for w in WORD.findall(answer)):
+            issues.append({"code": "i_capital"})
+        written = {w.lower(): w for w in WORD.findall(answer)}
+        for text in item["words"]:
+            for w in WORD.findall(text):
+                if w[0].isupper() and written.get(w.lower(), w)[0].islower():
+                    issues.append({"code": "acronym" if w.isupper() and len(w) > 1 else "proper_capital", "w": w})
+        if not answer.endswith(END):
+            issues.append({"code": "end_mark"})
+        if missing:
+            issues.append({"code": "apostrophe", "w": ", ".join(dict.fromkeys(missing))})
+        if issues:
+            out["result"] = "form"
+    return out

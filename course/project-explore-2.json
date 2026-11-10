@@ -22,6 +22,15 @@
   "q_fill": "Įrašyk, kas trūksta:",
   "q_translate": "Išversk į anglų kalbą:",
   "q_listen": "Klausyk ir parašyk, ką girdi.",
+  "q_sentence": "Dabar sudaryk sakinį su žodžiu {w}.",
+  "or": "arba",
+  "q_sentence_pattern": "Gali naudoti: {p}",
+  "sentence_starters": "Gali pradėti taip: I like … / I can see … / This is … / My … is …",
+  "missing_word": "Sakinyje turi būti žodis {w}.",
+  "too_short": "Parašyk visą sakinį – bent 3 žodžius.",
+  "not_for_lesson": "Parašykime kitą sakinį – apie pamokos žodžius.",
+  "example": "Pavyzdžiui: {a}",
+  "skip": "Gerai, einame toliau.",
   "exercise": "Pratimas",
   "review": "Dar kartą tie, kurie nepavyko:",
   "praise": [
@@ -50,6 +59,7 @@
   "is_question": "Tai klausimas – gale reikia klaustuko (?).",
   "not_question": "Tai ne klausimas – gale reikia taško (.).",
   "apostrophe": "Trūksta apostrofo: {w}.",
+  "end_mark": "Sakinio gale reikia taško (.) arba klaustuko (?).",
   "round_done": "Pratimai baigti! Iš pirmo karto teisingai: {n} iš {total}.",
   "again": "Dar kartą",
   "dont_know": "Nežinau",
@@ -66,7 +76,8 @@
   "t_fill": "Užpildyk tarpą",
   "t_translate": "Sakinių vertimas",
   "t_listen": "Klausymas (diktantas)",
-  "t_count": "Pratimų skaičius",
+  "t_sentence": "Sakinių kūrimas su žodžiais",
+  "t_count": "Daugiausia pratimų",
   "t_strict": "Tikrinti didžiąsias raides ir skyrybą",
   "t_speak": "Ištarti teisingą atsakymą balsu",
   "t_focus": "Nurodymas Williamui (nebūtina)",
@@ -79,8 +90,10 @@
  "lessons": [
   {
    "id": 1,
-   "title": "Intro A · Moving house",
+   "group": "Intro A · Moving house · Persikraustymas",
+   "title": "Intro A (1/3) · Moving house",
    "title_learner": "Persikraustymas",
+   "part": "1/3",
    "words": [
     {
      "text": "box – boxes",
@@ -105,7 +118,172 @@
     {
      "text": "man – men",
      "meaning": "vyras – vyrai"
+    }
+   ],
+   "grammar": [
+    {
+     "id": "have_got",
+     "name": "have got / has got – turiu",
+     "explain": "Have got reiškia „turėti“. Su he/she/it – has got. Neiginys: haven't got / hasn't got.",
+     "pattern": "I have got (I've got) · She has got (She's got) · Have you got …? – Yes, I have.",
+     "examples": [
+      {
+       "text": "I've got a big bedroom.",
+       "meaning": "Aš turiu didelį miegamąjį."
+      },
+      {
+       "text": "Has he got a dog? – No, he hasn't.",
+       "meaning": "Ar jis turi šunį? – Ne."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ got a big bedroom. (have / has)",
+       "a": [
+        "have"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ got a sister. (have / has)",
+       "a": [
+        "has"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you got a pet? (have / has)",
+       "a": [
+        "Have"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He ___ got a dog. (neiginys)",
+       "a": [
+        "hasn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Have they got a car? – Yes, they ___.",
+       "a": [
+        "have"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš turiu brolį.",
+       "a": [
+        "I've got a brother.",
+        "I have a brother."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar tu turi šunį?",
+       "a": [
+        "Have you got a dog?",
+        "Do you have a dog?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji neturi katės.",
+       "a": [
+        "She hasn't got a cat.",
+        "She doesn't have a cat."
+       ]
+      }
+     ]
     },
+    {
+     "id": "like_ing",
+     "name": "love / like / don't like / hate + -ing",
+     "explain": "Kai sakome, kas patinka ar nepatinka daryti, po love, like, don't like, can't stand, hate veiksmažodis gauna galūnę -ing.",
+     "pattern": "I love / like / don't like / can't stand / hate + veiksmažodis-ing",
+     "examples": [
+      {
+       "text": "I love dancing.",
+       "meaning": "Aš labai mėgstu šokti."
+      },
+      {
+       "text": "My brother hates getting up early.",
+       "meaning": "Mano brolis nekenčia anksti keltis."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I love ___. (dance)",
+       "a": [
+        "dancing"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "My sister likes ___ books. (read)",
+       "a": [
+        "reading"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He doesn't like ___ up early. (get)",
+       "a": [
+        "getting"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We hate ___ in cold water. (swim)",
+       "a": [
+        "swimming"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I can't stand ___ sudoku. (do)",
+       "a": [
+        "doing"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš mėgstu šokti.",
+       "a": [
+        "I like dancing.",
+        "I love dancing."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mano brolis nemėgsta skaityti.",
+       "a": [
+        "My brother doesn't like reading."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes labai mėgstame plaukti.",
+       "a": [
+        "We love swimming."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "group": "Intro A · Moving house · Persikraustymas",
+   "title": "Intro A (2/3) · Moving house",
+   "title_learner": "Persikraustymas",
+   "part": "2/3",
+   "words": [
     {
      "text": "woman – women",
      "meaning": "moteris – moterys"
@@ -129,7 +307,172 @@
     {
      "text": "leave",
      "meaning": "išvykti"
+    }
+   ],
+   "grammar": [
+    {
+     "id": "have_got",
+     "name": "have got / has got – turiu",
+     "explain": "Have got reiškia „turėti“. Su he/she/it – has got. Neiginys: haven't got / hasn't got.",
+     "pattern": "I have got (I've got) · She has got (She's got) · Have you got …? – Yes, I have.",
+     "examples": [
+      {
+       "text": "I've got a big bedroom.",
+       "meaning": "Aš turiu didelį miegamąjį."
+      },
+      {
+       "text": "Has he got a dog? – No, he hasn't.",
+       "meaning": "Ar jis turi šunį? – Ne."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ got a big bedroom. (have / has)",
+       "a": [
+        "have"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ got a sister. (have / has)",
+       "a": [
+        "has"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you got a pet? (have / has)",
+       "a": [
+        "Have"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He ___ got a dog. (neiginys)",
+       "a": [
+        "hasn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Have they got a car? – Yes, they ___.",
+       "a": [
+        "have"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš turiu brolį.",
+       "a": [
+        "I've got a brother.",
+        "I have a brother."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar tu turi šunį?",
+       "a": [
+        "Have you got a dog?",
+        "Do you have a dog?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji neturi katės.",
+       "a": [
+        "She hasn't got a cat.",
+        "She doesn't have a cat."
+       ]
+      }
+     ]
     },
+    {
+     "id": "like_ing",
+     "name": "love / like / don't like / hate + -ing",
+     "explain": "Kai sakome, kas patinka ar nepatinka daryti, po love, like, don't like, can't stand, hate veiksmažodis gauna galūnę -ing.",
+     "pattern": "I love / like / don't like / can't stand / hate + veiksmažodis-ing",
+     "examples": [
+      {
+       "text": "I love dancing.",
+       "meaning": "Aš labai mėgstu šokti."
+      },
+      {
+       "text": "My brother hates getting up early.",
+       "meaning": "Mano brolis nekenčia anksti keltis."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I love ___. (dance)",
+       "a": [
+        "dancing"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "My sister likes ___ books. (read)",
+       "a": [
+        "reading"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He doesn't like ___ up early. (get)",
+       "a": [
+        "getting"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We hate ___ in cold water. (swim)",
+       "a": [
+        "swimming"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I can't stand ___ sudoku. (do)",
+       "a": [
+        "doing"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš mėgstu šokti.",
+       "a": [
+        "I like dancing.",
+        "I love dancing."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mano brolis nemėgsta skaityti.",
+       "a": [
+        "My brother doesn't like reading."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes labai mėgstame plaukti.",
+       "a": [
+        "We love swimming."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "group": "Intro A · Moving house · Persikraustymas",
+   "title": "Intro A (3/3) · Moving house",
+   "title_learner": "Persikraustymas",
+   "part": "3/3",
+   "words": [
     {
      "text": "visitor",
      "meaning": "svečias"
@@ -313,9 +656,11 @@
    ]
   },
   {
-   "id": 2,
-   "title": "Intro B · Neighbours",
+   "id": 4,
+   "group": "Intro B · Neighbours · Kaimynai",
+   "title": "Intro B (1/3) · Neighbours",
    "title_learner": "Kaimynai",
+   "part": "1/3",
    "words": [
     {
      "text": "January",
@@ -348,7 +693,171 @@
     {
      "text": "August",
      "meaning": "rugpjūtis"
+    }
+   ],
+   "grammar": [
+    {
+     "id": "can",
+     "name": "can / can't – galiu, moku",
+     "explain": "Can reiškia „galiu, moku“, can't – „negaliu, nemoku“. Po can veiksmažodis lieka toks pat, be -s.",
+     "pattern": "I/You/He/She + can / can't + veiksmažodis · Can you …? – Yes, I can. / No, I can't.",
+     "examples": [
+      {
+       "text": "I can swim.",
+       "meaning": "Aš moku plaukti."
+      },
+      {
+       "text": "Can he play the guitar? – No, he can't.",
+       "meaning": "Ar jis moka groti gitara? – Ne, nemoka."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ swim. (moku)",
+       "a": [
+        "can"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ play the guitar. (nemoka)",
+       "a": [
+        "can't",
+        "cannot"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you dance? (ar moki)",
+       "a": [
+        "Can"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can you dive? – Yes, I ___.",
+       "a": [
+        "can"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can he speak Spanish? – No, he ___.",
+       "a": [
+        "can't",
+        "cannot"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš moku šokti.",
+       "a": [
+        "I can dance."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji nemoka nardyti.",
+       "a": [
+        "She can't dive."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar tu moki groti gitara?",
+       "a": [
+        "Can you play the guitar?"
+       ]
+      }
+     ]
     },
+    {
+     "id": "pronouns",
+     "name": "Subject, object and possessive pronouns",
+     "explain": "Kas daro: I, you, he, she, it, we, they. Ką/kam: me, you, him, her, it, us, them. Kieno: mine, yours, his, hers, ours, theirs.",
+     "pattern": "I like him. · He likes me. · The board is mine.",
+     "examples": [
+      {
+       "text": "She helps us every day.",
+       "meaning": "Ji mums padeda kiekvieną dieną."
+      },
+      {
+       "text": "Is this surfboard yours? – Yes, it's mine.",
+       "meaning": "Ar ši banglentė tavo? – Taip, mano."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I like ___. (jį)",
+       "a": [
+        "him"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She helps ___ every day. (mus)",
+       "a": [
+        "us"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can you help ___? (man)",
+       "a": [
+        "me"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Is this surfboard yours? – Yes, it's ___. (mano)",
+       "a": [
+        "mine"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I can see ___. (juos)",
+       "a": [
+        "them"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji mums padeda.",
+       "a": [
+        "She helps us."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš ją pažįstu.",
+       "a": [
+        "I know her."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar ši knyga tavo?",
+       "a": [
+        "Is this book yours?",
+        "Is this your book?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "group": "Intro B · Neighbours · Kaimynai",
+   "title": "Intro B (2/3) · Neighbours",
+   "title_learner": "Kaimynai",
+   "part": "2/3",
+   "words": [
     {
      "text": "September",
      "meaning": "rugsėjis"
@@ -380,7 +889,171 @@
     {
      "text": "twentieth",
      "meaning": "dvidešimtas"
+    }
+   ],
+   "grammar": [
+    {
+     "id": "can",
+     "name": "can / can't – galiu, moku",
+     "explain": "Can reiškia „galiu, moku“, can't – „negaliu, nemoku“. Po can veiksmažodis lieka toks pat, be -s.",
+     "pattern": "I/You/He/She + can / can't + veiksmažodis · Can you …? – Yes, I can. / No, I can't.",
+     "examples": [
+      {
+       "text": "I can swim.",
+       "meaning": "Aš moku plaukti."
+      },
+      {
+       "text": "Can he play the guitar? – No, he can't.",
+       "meaning": "Ar jis moka groti gitara? – Ne, nemoka."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ swim. (moku)",
+       "a": [
+        "can"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ play the guitar. (nemoka)",
+       "a": [
+        "can't",
+        "cannot"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you dance? (ar moki)",
+       "a": [
+        "Can"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can you dive? – Yes, I ___.",
+       "a": [
+        "can"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can he speak Spanish? – No, he ___.",
+       "a": [
+        "can't",
+        "cannot"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš moku šokti.",
+       "a": [
+        "I can dance."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji nemoka nardyti.",
+       "a": [
+        "She can't dive."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar tu moki groti gitara?",
+       "a": [
+        "Can you play the guitar?"
+       ]
+      }
+     ]
     },
+    {
+     "id": "pronouns",
+     "name": "Subject, object and possessive pronouns",
+     "explain": "Kas daro: I, you, he, she, it, we, they. Ką/kam: me, you, him, her, it, us, them. Kieno: mine, yours, his, hers, ours, theirs.",
+     "pattern": "I like him. · He likes me. · The board is mine.",
+     "examples": [
+      {
+       "text": "She helps us every day.",
+       "meaning": "Ji mums padeda kiekvieną dieną."
+      },
+      {
+       "text": "Is this surfboard yours? – Yes, it's mine.",
+       "meaning": "Ar ši banglentė tavo? – Taip, mano."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I like ___. (jį)",
+       "a": [
+        "him"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She helps ___ every day. (mus)",
+       "a": [
+        "us"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can you help ___? (man)",
+       "a": [
+        "me"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Is this surfboard yours? – Yes, it's ___. (mano)",
+       "a": [
+        "mine"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I can see ___. (juos)",
+       "a": [
+        "them"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji mums padeda.",
+       "a": [
+        "She helps us."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš ją pažįstu.",
+       "a": [
+        "I know her."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar ši knyga tavo?",
+       "a": [
+        "Is this book yours?",
+        "Is this your book?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "group": "Intro B · Neighbours · Kaimynai",
+   "title": "Intro B (3/3) · Neighbours",
+   "title_learner": "Kaimynai",
+   "part": "3/3",
+   "words": [
     {
      "text": "twenty-first",
      "meaning": "dvidešimt pirmas"
@@ -563,9 +1236,11 @@
    ]
   },
   {
-   "id": 3,
-   "title": "1A · New friends",
+   "id": 7,
+   "group": "1A · New friends · Nauji draugai",
+   "title": "1A (1/3) · New friends",
    "title_learner": "Nauji draugai",
+   "part": "1/3",
    "words": [
     {
      "text": "tall",
@@ -598,7 +1273,95 @@
     {
      "text": "wavy",
      "meaning": "banguotas"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "ps_freq",
+     "name": "Present simple + adverbs of frequency",
+     "explain": "Present simple – tai, ką darai įprastai. Su he/she/it veiksmažodis gauna -s. Kaip dažnai: always, usually, often, sometimes, hardly ever, never (prieš veiksmažodį).",
+     "pattern": "I usually play … · She often wears … · He hardly ever …",
+     "examples": [
+      {
+       "text": "She usually wears glasses.",
+       "meaning": "Ji paprastai nešioja akinius."
+      },
+      {
+       "text": "My friend hardly ever plays sport.",
+       "meaning": "Mano draugas beveik niekada nesportuoja."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "She usually ___ glasses. (wear)",
+       "a": [
+        "wears"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "My friend ___ ever plays sport. (beveik niekada)",
+       "a": [
+        "hardly"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ go to the cinema. (kartais)",
+       "a": [
+        "sometimes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He ___ his teeth every morning. (brush)",
+       "a": [
+        "brushes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I ___ late for school. (niekada nebūnu)",
+       "a": [
+        "am never",
+        "'m never"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji paprastai nešioja akinius.",
+       "a": [
+        "She usually wears glasses."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mano draugas beveik niekada nesportuoja.",
+       "a": [
+        "My friend hardly ever plays sport.",
+        "My friend hardly ever does sport."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš dažnai skaitau knygas.",
+       "a": [
+        "I often read books."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "group": "1A · New friends · Nauji draugai",
+   "title": "1A (2/3) · New friends",
+   "title_learner": "Nauji draugai",
+   "part": "2/3",
+   "words": [
     {
      "text": "curly",
      "meaning": "garbanotas"
@@ -630,7 +1393,95 @@
     {
      "text": "smile",
      "meaning": "šypsena"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "ps_freq",
+     "name": "Present simple + adverbs of frequency",
+     "explain": "Present simple – tai, ką darai įprastai. Su he/she/it veiksmažodis gauna -s. Kaip dažnai: always, usually, often, sometimes, hardly ever, never (prieš veiksmažodį).",
+     "pattern": "I usually play … · She often wears … · He hardly ever …",
+     "examples": [
+      {
+       "text": "She usually wears glasses.",
+       "meaning": "Ji paprastai nešioja akinius."
+      },
+      {
+       "text": "My friend hardly ever plays sport.",
+       "meaning": "Mano draugas beveik niekada nesportuoja."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "She usually ___ glasses. (wear)",
+       "a": [
+        "wears"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "My friend ___ ever plays sport. (beveik niekada)",
+       "a": [
+        "hardly"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ go to the cinema. (kartais)",
+       "a": [
+        "sometimes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He ___ his teeth every morning. (brush)",
+       "a": [
+        "brushes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I ___ late for school. (niekada nebūnu)",
+       "a": [
+        "am never",
+        "'m never"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji paprastai nešioja akinius.",
+       "a": [
+        "She usually wears glasses."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mano draugas beveik niekada nesportuoja.",
+       "a": [
+        "My friend hardly ever plays sport.",
+        "My friend hardly ever does sport."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš dažnai skaitau knygas.",
+       "a": [
+        "I often read books."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "group": "1A · New friends · Nauji draugai",
+   "title": "1A (3/3) · New friends",
+   "title_learner": "Nauji draugai",
+   "part": "3/3",
+   "words": [
     {
      "text": "friendly",
      "meaning": "draugiškas"
@@ -741,9 +1592,11 @@
    ]
   },
   {
-   "id": 4,
-   "title": "1B · New school",
+   "id": 10,
+   "group": "1B · New school · Nauja mokykla",
+   "title": "1B (1/4) · New school",
    "title_learner": "Nauja mokykla",
+   "part": "1/4",
    "words": [
     {
      "text": "art",
@@ -772,7 +1625,95 @@
     {
      "text": "IT",
      "meaning": "informacinės technologijos"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "pres_cont",
+     "name": "Present continuous – ką darai dabar",
+     "explain": "Kai kalbame apie tai, kas vyksta dabar, sakome am/is/are + veiksmažodis su -ing.",
+     "pattern": "I am / He is / They are + veiksmažodis-ing · Are you …ing? – Yes, I am.",
+     "examples": [
+      {
+       "text": "I'm reading a book now.",
+       "meaning": "Aš dabar skaitau knygą."
+      },
+      {
+       "text": "Is she watching TV? – No, she isn't.",
+       "meaning": "Ar ji žiūri televizorių? – Ne."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ reading a book now. (am / is / are)",
+       "a": [
+        "am"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She is ___ TV. (watch)",
+       "a": [
+        "watching"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "They ___ playing football. (am / is / are)",
+       "a": [
+        "are"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We are ___ a cake. (make)",
+       "a": [
+        "making"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you listening? (am / is / are)",
+       "a": [
+        "Are"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš dabar skaitau.",
+       "a": [
+        "I'm reading now.",
+        "Now I'm reading."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Jis dabar žaidžia futbolą.",
+       "a": [
+        "He's playing football now.",
+        "Now he's playing football."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ką tu darai?",
+       "a": [
+        "What are you doing?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "group": "1B · New school · Nauja mokykla",
+   "title": "1B (2/4) · New school",
+   "title_learner": "Nauja mokykla",
+   "part": "2/4",
+   "words": [
     {
      "text": "maths",
      "meaning": "matematika"
@@ -800,7 +1741,95 @@
     {
      "text": "dictionary",
      "meaning": "žodynas"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "pres_cont",
+     "name": "Present continuous – ką darai dabar",
+     "explain": "Kai kalbame apie tai, kas vyksta dabar, sakome am/is/are + veiksmažodis su -ing.",
+     "pattern": "I am / He is / They are + veiksmažodis-ing · Are you …ing? – Yes, I am.",
+     "examples": [
+      {
+       "text": "I'm reading a book now.",
+       "meaning": "Aš dabar skaitau knygą."
+      },
+      {
+       "text": "Is she watching TV? – No, she isn't.",
+       "meaning": "Ar ji žiūri televizorių? – Ne."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ reading a book now. (am / is / are)",
+       "a": [
+        "am"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She is ___ TV. (watch)",
+       "a": [
+        "watching"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "They ___ playing football. (am / is / are)",
+       "a": [
+        "are"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We are ___ a cake. (make)",
+       "a": [
+        "making"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you listening? (am / is / are)",
+       "a": [
+        "Are"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš dabar skaitau.",
+       "a": [
+        "I'm reading now.",
+        "Now I'm reading."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Jis dabar žaidžia futbolą.",
+       "a": [
+        "He's playing football now.",
+        "Now he's playing football."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ką tu darai?",
+       "a": [
+        "What are you doing?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "group": "1B · New school · Nauja mokykla",
+   "title": "1B (3/4) · New school",
+   "title_learner": "Nauja mokykla",
+   "part": "3/4",
+   "words": [
     {
      "text": "pen",
      "meaning": "rašiklis"
@@ -828,7 +1857,95 @@
     {
      "text": "bookshelf",
      "meaning": "knygų lentyna"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "pres_cont",
+     "name": "Present continuous – ką darai dabar",
+     "explain": "Kai kalbame apie tai, kas vyksta dabar, sakome am/is/are + veiksmažodis su -ing.",
+     "pattern": "I am / He is / They are + veiksmažodis-ing · Are you …ing? – Yes, I am.",
+     "examples": [
+      {
+       "text": "I'm reading a book now.",
+       "meaning": "Aš dabar skaitau knygą."
+      },
+      {
+       "text": "Is she watching TV? – No, she isn't.",
+       "meaning": "Ar ji žiūri televizorių? – Ne."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ reading a book now. (am / is / are)",
+       "a": [
+        "am"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She is ___ TV. (watch)",
+       "a": [
+        "watching"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "They ___ playing football. (am / is / are)",
+       "a": [
+        "are"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We are ___ a cake. (make)",
+       "a": [
+        "making"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ you listening? (am / is / are)",
+       "a": [
+        "Are"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš dabar skaitau.",
+       "a": [
+        "I'm reading now.",
+        "Now I'm reading."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Jis dabar žaidžia futbolą.",
+       "a": [
+        "He's playing football now.",
+        "Now he's playing football."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ką tu darai?",
+       "a": [
+        "What are you doing?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "group": "1B · New school · Nauja mokykla",
+   "title": "1B (4/4) · New school",
+   "title_learner": "Nauja mokykla",
+   "part": "4/4",
+   "words": [
     {
      "text": "pinboard",
      "meaning": "skelbimų lenta"
@@ -927,9 +2044,11 @@
    ]
   },
   {
-   "id": 5,
-   "title": "1C · New home",
+   "id": 14,
+   "group": "1C · New home · Nauji namai",
+   "title": "1C (1/2) · New home",
    "title_learner": "Nauji namai",
+   "part": "1/2",
    "words": [
     {
      "text": "know",
@@ -954,7 +2073,94 @@
     {
      "text": "miss",
      "meaning": "ilgėtis"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "ps_pc_stative",
+     "name": "Present simple ir continuous; stative verbs",
+     "explain": "Present simple – įprasti dalykai, present continuous – tai, kas vyksta dabar. Kai kurie veiksmažodžiai (know, like, love, want, need, understand, believe) beveik niekada negauna -ing.",
+     "pattern": "I live in … but I'm staying in … now. · I know (ne: I'm knowing)",
+     "examples": [
+      {
+       "text": "We usually live in a city, but now we're living in a tent.",
+       "meaning": "Paprastai gyvename mieste, bet dabar gyvename palapinėje."
+      },
+      {
+       "text": "I understand you.",
+       "meaning": "Aš tave suprantu."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I ___ you. (understand / am understanding)",
+       "a": [
+        "understand"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We usually live in a city, but now we ___ in a tent. (live / are living)",
+       "a": [
+        "are living"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ a new phone. (wants / is wanting)",
+       "a": [
+        "wants"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Look! They ___ in the rainforest. (walk / are walking)",
+       "a": [
+        "are walking"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Do you ___ the answer? (know / knowing)",
+       "a": [
+        "know"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš tave suprantu.",
+       "a": [
+        "I understand you."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš ilgiuosi savo draugų.",
+       "a": [
+        "I miss my friends."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Dabar mes gyvename palapinėje.",
+       "a": [
+        "We're living in a tent now.",
+        "Now we're living in a tent."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "group": "1C · New home · Nauji namai",
+   "title": "1C (2/2) · New home",
+   "title_learner": "Nauji namai",
+   "part": "2/2",
+   "words": [
     {
      "text": "huge",
      "meaning": "didžiulis"
@@ -1056,9 +2262,11 @@
    ]
   },
   {
-   "id": 6,
-   "title": "1D · Getting on",
+   "id": 16,
+   "group": "1D · Getting on · Sutariame",
+   "title": "1D (1/2) · Getting on",
    "title_learner": "Sutariame",
+   "part": "1/2",
    "words": [
     {
      "text": "Can I …?",
@@ -1087,7 +2295,17 @@
     {
      "text": "No problem.",
      "meaning": "Jokių problemų."
-    },
+    }
+   ],
+   "grammar": []
+  },
+  {
+   "id": 17,
+   "group": "1D · Getting on · Sutariame",
+   "title": "1D (2/2) · Getting on",
+   "title_learner": "Sutariame",
+   "part": "2/2",
+   "words": [
     {
      "text": "I'm sorry, no.",
      "meaning": "Atsiprašau, ne."
@@ -1116,9 +2334,11 @@
    "grammar": []
   },
   {
-   "id": 7,
-   "title": "2A · What's the weather like?",
+   "id": 18,
+   "group": "2A · What's the weather like? · Koks oras?",
+   "title": "2A (1/2) · What's the weather like?",
    "title_learner": "Koks oras?",
+   "part": "1/2",
    "words": [
     {
      "text": "sunny",
@@ -1151,7 +2371,250 @@
     {
      "text": "warm",
      "meaning": "šilta"
+    }
+   ],
+   "grammar": [
+    {
+     "id": "past_regular",
+     "name": "Past simple: taisyklingi veiksmažodžiai",
+     "explain": "Praeityje taisyklingi veiksmažodžiai gauna -ed: rain → rained, stay → stayed, stop → stopped, try → tried.",
+     "pattern": "veiksmažodis + -ed",
+     "examples": [
+      {
+       "text": "It rained all day yesterday.",
+       "meaning": "Vakar visą dieną lijo."
+      },
+      {
+       "text": "We stayed at home.",
+       "meaning": "Mes likome namie."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "It ___ all day yesterday. (rain)",
+       "a": [
+        "rained"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ at home. (stay)",
+       "a": [
+        "stayed"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The rain ___ at five o'clock. (stop)",
+       "a": [
+        "stopped"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I ___ to find my umbrella. (try)",
+       "a": [
+        "tried"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "They ___ a film. (watch)",
+       "a": [
+        "watched"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Vakar visą dieną lijo.",
+       "a": [
+        "It rained all day yesterday.",
+        "Yesterday it rained all day."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes likome namie.",
+       "a": [
+        "We stayed at home.",
+        "We stayed home."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Jie žiūrėjo filmą.",
+       "a": [
+        "They watched a film.",
+        "They watched a movie."
+       ]
+      }
+     ]
     },
+    {
+     "id": "there_was",
+     "name": "there was / there were",
+     "explain": "Praeityje: there was – apie vieną, there were – apie kelis.",
+     "pattern": "There was a … · There were some … · Was there …?",
+     "examples": [
+      {
+       "text": "There was a storm last night.",
+       "meaning": "Praeitą naktį buvo audra."
+      },
+      {
+       "text": "There were a lot of clouds.",
+       "meaning": "Buvo daug debesų."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "There ___ a storm last night. (was / were)",
+       "a": [
+        "was"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There ___ a lot of clouds. (was / were)",
+       "a": [
+        "were"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ there a rainbow? (was / were)",
+       "a": [
+        "Was"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There ___ any snow. (wasn't / weren't)",
+       "a": [
+        "wasn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Were there any people? – No, there ___.",
+       "a": [
+        "weren't"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Vakar buvo audra.",
+       "a": [
+        "There was a storm yesterday.",
+        "Yesterday there was a storm."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Buvo daug debesų.",
+       "a": [
+        "There were a lot of clouds.",
+        "There were lots of clouds.",
+        "There were many clouds."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar buvo vaivorykštė?",
+       "a": [
+        "Was there a rainbow?"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "prep_time",
+     "name": "Prepositions of time – in / on / at",
+     "explain": "In – mėnesiai, metai, metų laikai, dienos dalys (in July, in the morning). On – dienos ir datos (on Monday, on 5th May). At – laikas (at 7 o'clock, at the weekend).",
+     "pattern": "in July · on Monday · at 3 o'clock",
+     "examples": [
+      {
+       "text": "It snowed in January.",
+       "meaning": "Sausį snigo."
+      },
+      {
+       "text": "We met on Saturday at 10 o'clock.",
+       "meaning": "Susitikome šeštadienį 10 valandą."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "It snowed ___ January. (in / on / at)",
+       "a": [
+        "in"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We met ___ Saturday. (in / on / at)",
+       "a": [
+        "on"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The film starts ___ seven o'clock. (in / on / at)",
+       "a": [
+        "at"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I get up early ___ the morning. (in / on / at)",
+       "a": [
+        "in"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "My birthday is ___ the fifth of May. (in / on / at)",
+       "a": [
+        "on"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Sausį snigo.",
+       "a": [
+        "It snowed in January."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Susitikome šeštadienį.",
+       "a": [
+        "We met on Saturday."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Pamoka prasideda aštuntą valandą.",
+       "a": [
+        "The lesson starts at eight o'clock.",
+        "The lesson begins at eight o'clock."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 19,
+   "group": "2A · What's the weather like? · Koks oras?",
+   "title": "2A (2/2) · What's the weather like?",
+   "title_learner": "Koks oras?",
+   "part": "2/2",
+   "words": [
     {
      "text": "cold",
      "meaning": "šalta"
@@ -1421,9 +2884,11 @@
    ]
   },
   {
-   "id": 8,
-   "title": "2B · The lost tribe",
+   "id": 20,
+   "group": "2B · The lost tribe · Pasiklydusi gentis",
+   "title": "2B (1/2) · The lost tribe",
    "title_learner": "Pasiklydusi gentis",
+   "part": "1/2",
    "words": [
     {
      "text": "tribe",
@@ -1448,7 +2913,248 @@
     {
      "text": "illness",
      "meaning": "liga"
+    }
+   ],
+   "grammar": [
+    {
+     "id": "past_be",
+     "name": "Past simple: be – was / were",
+     "explain": "Praeityje am/is virsta was, o are virsta were. Neiginys: wasn't / weren't.",
+     "pattern": "I/He/She/It was · You/We/They were · Was he …? – Yes, he was.",
+     "examples": [
+      {
+       "text": "She was a champion in 2020.",
+       "meaning": "2020 metais ji buvo čempionė."
+      },
+      {
+       "text": "We weren't at home yesterday.",
+       "meaning": "Vakar mes nebuvome namie."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "She ___ a champion in 2020. (was / were)",
+       "a": [
+        "was"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ at home yesterday. (was / were)",
+       "a": [
+        "were"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "They ___ at school. (wasn't / weren't)",
+       "a": [
+        "weren't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ he famous? (was / were)",
+       "a": [
+        "Was"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Were you happy? – Yes, I ___.",
+       "a": [
+        "was"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Vakar aš buvau namie.",
+       "a": [
+        "I was at home yesterday.",
+        "Yesterday I was at home."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Jie buvo čempionai.",
+       "a": [
+        "They were champions."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar tu buvai mokykloje?",
+       "a": [
+        "Were you at school?"
+       ]
+      }
+     ]
     },
+    {
+     "id": "past_irregular",
+     "name": "Past simple: netaisyklingi veiksmažodžiai",
+     "explain": "Kai kurie veiksmažodžiai praeityje turi savo formą, ją reikia išmokti: buy → bought, eat → ate, drink → drank, give → gave, make → made, take → took, write → wrote, wear → wore.",
+     "pattern": "I bought · We ate · She made · Did you buy …? (klausime – be pakeitimo)",
+     "examples": [
+      {
+       "text": "We ate some cheese and took a photo.",
+       "meaning": "Mes suvalgėme sūrio ir nusifotografavome."
+      },
+      {
+       "text": "I bought a souvenir.",
+       "meaning": "Aš nusipirkau suvenyrą."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "We ___ some cheese. (eat)",
+       "a": [
+        "ate"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I ___ a souvenir. (buy)",
+       "a": [
+        "bought"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ a photo. (take)",
+       "a": [
+        "took"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "They ___ hot chocolate. (drink)",
+       "a": [
+        "drank"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He ___ a recipe. (write)",
+       "a": [
+        "wrote"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes nusipirkome suvenyrą.",
+       "a": [
+        "We bought a souvenir."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš išgėriau karšto šokolado.",
+       "a": [
+        "I drank hot chocolate.",
+        "I drank some hot chocolate."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji pagamino jogurtą.",
+       "a": [
+        "She made a yoghurt.",
+        "She made yoghurt."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "past_questions",
+     "name": "Past simple: klausimai ir neiginiai",
+     "explain": "Klausimas: Did + veiksmažodis (be -ed)? Neiginys: didn't + veiksmažodis. Su be: Was/Were …? wasn't/weren't.",
+     "pattern": "Did you see …? – Yes, I did. · I didn't find … · Were they scared?",
+     "examples": [
+      {
+       "text": "Did they find the tribe? – Yes, they did.",
+       "meaning": "Ar jie rado gentį? – Taip."
+      },
+      {
+       "text": "He didn't take any medicine.",
+       "meaning": "Jis negėrė jokių vaistų."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "___ they find the tribe? (did)",
+       "a": [
+        "Did"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He ___ take any medicine. (neiginys)",
+       "a": [
+        "didn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Did you ___ the jungle? (see)",
+       "a": [
+        "see"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ they scared? (was / were)",
+       "a": [
+        "Were"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Did she help them? – Yes, she ___.",
+       "a": [
+        "did"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar jie rado gentį?",
+       "a": [
+        "Did they find the tribe?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Jis negėrė vaistų.",
+       "a": [
+        "He didn't take any medicine.",
+        "He didn't take the medicine."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar jūs bijojote?",
+       "a": [
+        "Were you scared?",
+        "Were you frightened?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 21,
+   "group": "2B · The lost tribe · Pasiklydusi gentis",
+   "title": "2B (2/2) · The lost tribe",
+   "title_learner": "Pasiklydusi gentis",
+   "part": "2/2",
+   "words": [
     {
      "text": "medicine",
      "meaning": "vaistai"
@@ -1704,9 +3410,11 @@
    ]
   },
   {
-   "id": 9,
-   "title": "2C · Young survivors",
+   "id": 22,
+   "group": "2C · Young survivors · Jaunieji išgyvenusieji",
+   "title": "2C (1/2) · Young survivors",
    "title_learner": "Jaunieji išgyvenusieji",
+   "part": "1/2",
    "words": [
     {
      "text": "avalanche",
@@ -1739,7 +3447,93 @@
     {
      "text": "tsunami",
      "meaning": "cunamis"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "qwords_past",
+     "name": "Question words; adverbs of time",
+     "explain": "Klausimai apie praeitį: What/Where/When/Why/How + did …? Kada: yesterday, last week, two days ago, then, after that, finally.",
+     "pattern": "When did it happen? – Two years ago. · First … then … finally …",
+     "examples": [
+      {
+       "text": "When did the earthquake happen? – Three years ago.",
+       "meaning": "Kada įvyko žemės drebėjimas? – Prieš trejus metus."
+      },
+      {
+       "text": "First we ran, then we hid.",
+       "meaning": "Pirmiausia bėgome, tada pasislėpėme."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "___ did the earthquake happen? (kada)",
+       "a": [
+        "When"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "It happened three years ___. (prieš)",
+       "a": [
+        "ago"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "First we ran, ___ we hid. (tada)",
+       "a": [
+        "then"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ did they go? (kur)",
+       "a": [
+        "Where"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___, we were safe. (galiausiai)",
+       "a": [
+        "Finally"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Kada tai įvyko?",
+       "a": [
+        "When did it happen?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Prieš dvejus metus.",
+       "a": [
+        "Two years ago."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Kur jūs buvote?",
+       "a": [
+        "Where were you?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 23,
+   "group": "2C · Young survivors · Jaunieji išgyvenusieji",
+   "title": "2C (2/2) · Young survivors",
+   "title_learner": "Jaunieji išgyvenusieji",
+   "part": "2/2",
+   "words": [
     {
      "text": "volcanic eruption",
      "meaning": "ugnikalnio išsiveržimas"
@@ -1848,9 +3642,11 @@
    ]
   },
   {
-   "id": 10,
-   "title": "2D · It all went wrong!",
+   "id": 24,
+   "group": "2D · It all went wrong! · Viskas nepavyko!",
+   "title": "2D (1/2) · It all went wrong!",
    "title_learner": "Viskas nepavyko!",
+   "part": "1/2",
    "words": [
     {
      "text": "Oh no!",
@@ -1875,7 +3671,17 @@
     {
      "text": "Sorry about that.",
      "meaning": "Atsiprašau dėl to."
-    },
+    }
+   ],
+   "grammar": []
+  },
+  {
+   "id": 25,
+   "group": "2D · It all went wrong! · Viskas nepavyko!",
+   "title": "2D (2/2) · It all went wrong!",
+   "title_learner": "Viskas nepavyko!",
+   "part": "2/2",
+   "words": [
     {
      "text": "That's a real shame!",
      "meaning": "Labai gaila!"
@@ -1904,9 +3710,11 @@
    "grammar": []
   },
   {
-   "id": 11,
-   "title": "3A · Food and drink",
+   "id": 26,
+   "group": "3A · Food and drink · Maistas ir gėrimai",
+   "title": "3A (1/3) · Food and drink",
    "title_learner": "Maistas ir gėrimai",
+   "part": "1/3",
    "words": [
     {
      "text": "banana",
@@ -1939,7 +3747,96 @@
     {
      "text": "cheese",
      "meaning": "sūris"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "countables",
+     "name": "Countable / uncountable – skaičiuojami ir neskaičiuojami",
+     "explain": "Skaičiuojamus daiktus galima suskaičiuoti (an egg, two eggs). Neskaičiuojamų negalima (milk, rice, cheese) – jie neturi daugiskaitos ir a/an.",
+     "pattern": "an apple – apples · some milk (ne: a milk)",
+     "examples": [
+      {
+       "text": "I've got two bananas and some rice.",
+       "meaning": "Turiu du bananus ir šiek tiek ryžių."
+      },
+      {
+       "text": "Milk is good for you.",
+       "meaning": "Pienas tau naudingas."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I've got two ___. (banana)",
+       "a": [
+        "bananas"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There are three ___ in the bag. (potato)",
+       "a": [
+        "potatoes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I'd like ___ apple. (a / an)",
+       "a": [
+        "an"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We need two ___. (tomato)",
+       "a": [
+        "tomatoes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can I have some ___, please? (rice / rices)",
+       "a": [
+        "rice"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš turiu du bananus.",
+       "a": [
+        "I've got two bananas.",
+        "I have two bananas."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Pienas yra sveikas.",
+       "a": [
+        "Milk is healthy.",
+        "Milk is good for you."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš noriu obuolio.",
+       "a": [
+        "I want an apple.",
+        "I'd like an apple."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 27,
+   "group": "3A · Food and drink · Maistas ir gėrimai",
+   "title": "3A (2/3) · Food and drink",
+   "title_learner": "Maistas ir gėrimai",
+   "part": "2/3",
+   "words": [
     {
      "text": "chicken",
      "meaning": "vištiena"
@@ -1971,7 +3868,96 @@
     {
      "text": "crisps",
      "meaning": "traškučiai"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "countables",
+     "name": "Countable / uncountable – skaičiuojami ir neskaičiuojami",
+     "explain": "Skaičiuojamus daiktus galima suskaičiuoti (an egg, two eggs). Neskaičiuojamų negalima (milk, rice, cheese) – jie neturi daugiskaitos ir a/an.",
+     "pattern": "an apple – apples · some milk (ne: a milk)",
+     "examples": [
+      {
+       "text": "I've got two bananas and some rice.",
+       "meaning": "Turiu du bananus ir šiek tiek ryžių."
+      },
+      {
+       "text": "Milk is good for you.",
+       "meaning": "Pienas tau naudingas."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I've got two ___. (banana)",
+       "a": [
+        "bananas"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There are three ___ in the bag. (potato)",
+       "a": [
+        "potatoes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I'd like ___ apple. (a / an)",
+       "a": [
+        "an"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We need two ___. (tomato)",
+       "a": [
+        "tomatoes"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Can I have some ___, please? (rice / rices)",
+       "a": [
+        "rice"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš turiu du bananus.",
+       "a": [
+        "I've got two bananas.",
+        "I have two bananas."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Pienas yra sveikas.",
+       "a": [
+        "Milk is healthy.",
+        "Milk is good for you."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš noriu obuolio.",
+       "a": [
+        "I want an apple.",
+        "I'd like an apple."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 28,
+   "group": "3A · Food and drink · Maistas ir gėrimai",
+   "title": "3A (3/3) · Food and drink",
+   "title_learner": "Maistas ir gėrimai",
+   "part": "3/3",
+   "words": [
     {
      "text": "chocolate",
      "meaning": "šokoladas"
@@ -2083,9 +4069,11 @@
    ]
   },
   {
-   "id": 12,
-   "title": "3B · Going shopping",
+   "id": 29,
+   "group": "3B · Going shopping · Apsipirkimas",
+   "title": "3B (1/2) · Going shopping",
    "title_learner": "Apsipirkimas",
+   "part": "1/2",
    "words": [
     {
      "text": "a bag of",
@@ -2118,7 +4106,95 @@
     {
      "text": "a glass of",
      "meaning": "stiklinė"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "some_any",
+     "name": "some and any",
+     "explain": "Some – teiginiuose (I've got some milk). Any – klausimuose ir neiginiuose (Have you got any eggs? We haven't got any bread).",
+     "pattern": "some + daiktas · any + daiktas?",
+     "examples": [
+      {
+       "text": "Can I have some juice, please?",
+       "meaning": "Ar galėčiau sulčių?"
+      },
+      {
+       "text": "There isn't any cheese.",
+       "meaning": "Sūrio nėra."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "Can I have ___ juice, please? (some / any)",
+       "a": [
+        "some"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There isn't ___ cheese. (some / any)",
+       "a": [
+        "any"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Have you got ___ eggs? (some / any)",
+       "a": [
+        "any"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I bought ___ bread. (some / any)",
+       "a": [
+        "some"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We haven't got ___ milk. (some / any)",
+       "a": [
+        "any"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes neturime duonos.",
+       "a": [
+        "We haven't got any bread.",
+        "We don't have any bread."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar turi kiaušinių?",
+       "a": [
+        "Have you got any eggs?",
+        "Do you have any eggs?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš nupirkau sūrio.",
+       "a": [
+        "I bought some cheese."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 30,
+   "group": "3B · Going shopping · Apsipirkimas",
+   "title": "3B (2/2) · Going shopping",
+   "title_learner": "Apsipirkimas",
+   "part": "2/2",
+   "words": [
     {
      "text": "a kilo of",
      "meaning": "kilogramas"
@@ -2229,9 +4305,11 @@
    ]
   },
   {
-   "id": 13,
-   "title": "3C · Eating well",
+   "id": 31,
+   "group": "3C · Eating well · Sveikai maitinamės",
+   "title": "3C (1/2) · Eating well",
    "title_learner": "Sveikai maitinamės",
+   "part": "1/2",
    "words": [
     {
      "text": "healthy",
@@ -2256,7 +4334,95 @@
     {
      "text": "soft drink",
      "meaning": "gaivusis gėrimas"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "how_much",
+     "name": "How much / How many; a lot of / not much / not many",
+     "explain": "How many – su skaičiuojamais daiktais, how much – su neskaičiuojamais. A lot of – daug (su abiem). Not many / not much – nedaug.",
+     "pattern": "How many apples …? · How much water …? · a lot of … · not much … · not many …",
+     "examples": [
+      {
+       "text": "How much sugar do you eat?",
+       "meaning": "Kiek cukraus tu suvalgai?"
+      },
+      {
+       "text": "I don't eat many sweets.",
+       "meaning": "Aš nevalgau daug saldainių."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "How ___ sugar do you eat? (much / many)",
+       "a": [
+        "much"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "How ___ apples are there? (much / many)",
+       "a": [
+        "many"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I don't eat ___ sweets. (much / many)",
+       "a": [
+        "many"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There isn't ___ water. (much / many)",
+       "a": [
+        "much"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She drinks a ___ of milk. (daug)",
+       "a": [
+        "lot"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Kiek obuolių tu turi?",
+       "a": [
+        "How many apples have you got?",
+        "How many apples do you have?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Kiek vandens tu išgeri?",
+       "a": [
+        "How much water do you drink?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš valgau daug vaisių.",
+       "a": [
+        "I eat a lot of fruit.",
+        "I eat lots of fruit."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 32,
+   "group": "3C · Eating well · Sveikai maitinamės",
+   "title": "3C (2/2) · Eating well",
+   "title_learner": "Sveikai maitinamės",
+   "part": "2/2",
+   "words": [
     {
      "text": "fizzy",
      "meaning": "gazuotas"
@@ -2363,9 +4529,11 @@
    ]
   },
   {
-   "id": 14,
+   "id": 33,
+   "group": "3D · Eating out · Valgome ne namie",
    "title": "3D · Eating out",
    "title_learner": "Valgome ne namie",
+   "part": "",
    "words": [
     {
      "text": "Can you …?",
@@ -2403,9 +4571,11 @@
    "grammar": []
   },
   {
-   "id": 15,
-   "title": "4A · Online",
+   "id": 34,
+   "group": "4A · Online · Internete",
+   "title": "4A (1/3) · Online",
    "title_learner": "Internete",
+   "part": "1/3",
    "words": [
     {
      "text": "go online",
@@ -2434,7 +4604,93 @@
     {
      "text": "scanner",
      "meaning": "skeneris"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "will_future",
+     "name": "will – ateitis (spėjimai)",
+     "explain": "Will + veiksmažodis: kai spėjame, kas bus ateityje. Neiginys: won't.",
+     "pattern": "I/You/He/They will (I'll) + veiksmažodis · won't · Will we …?",
+     "examples": [
+      {
+       "text": "In 2050 people will have robots at home.",
+       "meaning": "2050 metais žmonės namuose turės robotus."
+      },
+      {
+       "text": "We won't use keyboards.",
+       "meaning": "Mes nenaudosime klaviatūrų."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "People ___ have robots at home. (will / won't)",
+       "a": [
+        "will"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ use keyboards. (neiginys)",
+       "a": [
+        "won't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ we live on Mars? (will)",
+       "a": [
+        "Will"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I think it ___ rain tomorrow. (will / won't)",
+       "a": [
+        "will"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Will cars fly? – No, they ___.",
+       "a": [
+        "won't"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Žmonės turės robotus.",
+       "a": [
+        "People will have robots."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes nenaudosime klaviatūrų.",
+       "a": [
+        "We won't use keyboards."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar rytoj lis?",
+       "a": [
+        "Will it rain tomorrow?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 35,
+   "group": "4A · Online · Internete",
+   "title": "4A (2/3) · Online",
+   "title_learner": "Internete",
+   "part": "2/3",
+   "words": [
     {
      "text": "camera",
      "meaning": "kamera"
@@ -2462,7 +4718,93 @@
     {
      "text": "upload",
      "meaning": "įkelti"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "will_future",
+     "name": "will – ateitis (spėjimai)",
+     "explain": "Will + veiksmažodis: kai spėjame, kas bus ateityje. Neiginys: won't.",
+     "pattern": "I/You/He/They will (I'll) + veiksmažodis · won't · Will we …?",
+     "examples": [
+      {
+       "text": "In 2050 people will have robots at home.",
+       "meaning": "2050 metais žmonės namuose turės robotus."
+      },
+      {
+       "text": "We won't use keyboards.",
+       "meaning": "Mes nenaudosime klaviatūrų."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "People ___ have robots at home. (will / won't)",
+       "a": [
+        "will"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ use keyboards. (neiginys)",
+       "a": [
+        "won't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ we live on Mars? (will)",
+       "a": [
+        "Will"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I think it ___ rain tomorrow. (will / won't)",
+       "a": [
+        "will"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Will cars fly? – No, they ___.",
+       "a": [
+        "won't"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Žmonės turės robotus.",
+       "a": [
+        "People will have robots."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes nenaudosime klaviatūrų.",
+       "a": [
+        "We won't use keyboards."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar rytoj lis?",
+       "a": [
+        "Will it rain tomorrow?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 36,
+   "group": "4A · Online · Internete",
+   "title": "4A (3/3) · Online",
+   "title_learner": "Internete",
+   "part": "3/3",
+   "words": [
     {
      "text": "post",
      "meaning": "paskelbti"
@@ -2563,9 +4905,11 @@
    ]
   },
   {
-   "id": 16,
-   "title": "4B · Great ideas",
+   "id": 37,
+   "group": "4B · Great ideas · Puikios idėjos",
+   "title": "4B (1/2) · Great ideas",
    "title_learner": "Puikios idėjos",
+   "part": "1/2",
    "words": [
     {
      "text": "smartphone",
@@ -2590,7 +4934,93 @@
     {
      "text": "3D printer",
      "meaning": "3D spausdintuvas"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "going_to",
+     "name": "be going to – planai",
+     "explain": "Kai kalbame apie planus ir ketinimus, sakome am/is/are going to + veiksmažodis.",
+     "pattern": "I'm going to … · She's going to … · Are you going to …?",
+     "examples": [
+      {
+       "text": "I'm going to make a video.",
+       "meaning": "Aš ketinu sukurti vaizdo įrašą."
+      },
+      {
+       "text": "Are they going to buy a drone?",
+       "meaning": "Ar jie ketina pirkti droną?"
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "I'm ___ to make a video. (go)",
+       "a": [
+        "going"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "She ___ going to buy a drone. (am / is / are)",
+       "a": [
+        "is"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ they going to play? (am / is / are)",
+       "a": [
+        "Are"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We are going ___ visit our grandparents.",
+       "a": [
+        "to"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I'm not going ___ watch TV.",
+       "a": [
+        "to"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš ketinu sukurti vaizdo įrašą.",
+       "a": [
+        "I'm going to make a video."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ar jie ketina pirkti droną?",
+       "a": [
+        "Are they going to buy a drone?"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ji ketina žaisti futbolą.",
+       "a": [
+        "She's going to play football."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "group": "4B · Great ideas · Puikios idėjos",
+   "title": "4B (2/2) · Great ideas",
+   "title_learner": "Puikios idėjos",
+   "part": "2/2",
+   "words": [
     {
      "text": "electric car",
      "meaning": "elektromobilis"
@@ -2695,9 +5125,11 @@
    ]
   },
   {
-   "id": 17,
-   "title": "4C · Computer games",
+   "id": 39,
+   "group": "4C · Computer games · Kompiuteriniai žaidimai",
+   "title": "4C (1/2) · Computer games",
    "title_learner": "Kompiuteriniai žaidimai",
+   "part": "1/2",
    "words": [
     {
      "text": "character",
@@ -2718,7 +5150,99 @@
     {
      "text": "boss",
      "meaning": "bosas"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "will_decisions",
+     "name": "will – staigūs sprendimai",
+     "explain": "Will sakome, kai nusprendžiame kažką daryti tą pačią akimirką, kai kalbame.",
+     "pattern": "I'll + veiksmažodis",
+     "examples": [
+      {
+       "text": "It's dark. I'll switch on the light.",
+       "meaning": "Tamsu. Įjungsiu šviesą."
+      },
+      {
+       "text": "I'll play the next level!",
+       "meaning": "Žaisiu kitą lygį!"
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "It's dark. I ___ switch on the light. (will)",
+       "a": [
+        "will",
+        "'ll"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I'm thirsty. – I ___ get you some water. (will)",
+       "a": [
+        "will",
+        "'ll"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The phone is ringing. I ___ answer it. (will)",
+       "a": [
+        "will",
+        "'ll"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I ___ play the next level! (will)",
+       "a": [
+        "will",
+        "'ll"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "It's cold. I ___ close the window. (will)",
+       "a": [
+        "will",
+        "'ll"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Įjungsiu šviesą.",
+       "a": [
+        "I'll switch on the light.",
+        "I'll turn on the light."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Aš tau padėsiu.",
+       "a": [
+        "I'll help you."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Žaisiu kitą lygį.",
+       "a": [
+        "I'll play the next level."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 40,
+   "group": "4C · Computer games · Kompiuteriniai žaidimai",
+   "title": "4C (2/2) · Computer games",
+   "title_learner": "Kompiuteriniai žaidimai",
+   "part": "2/2",
+   "words": [
     {
      "text": "shield",
      "meaning": "skydas"
@@ -2825,9 +5349,11 @@
    ]
   },
   {
-   "id": 18,
-   "title": "4D · First-time vlogger",
+   "id": 41,
+   "group": "4D · First-time vlogger · Pirmasis vaizdo įrašas",
+   "title": "4D (1/2) · First-time vlogger",
    "title_learner": "Pirmasis vaizdo įrašas",
+   "part": "1/2",
    "words": [
     {
      "text": "Can I help you?",
@@ -2848,7 +5374,17 @@
     {
      "text": "That's great, thanks!",
      "meaning": "Puiku, ačiū!"
-    },
+    }
+   ],
+   "grammar": []
+  },
+  {
+   "id": 42,
+   "group": "4D · First-time vlogger · Pirmasis vaizdo įrašas",
+   "title": "4D (2/2) · First-time vlogger",
+   "title_learner": "Pirmasis vaizdo įrašas",
+   "part": "2/2",
+   "words": [
     {
      "text": "That's really kind of you.",
      "meaning": "Labai malonu iš tavo pusės."
@@ -2873,9 +5409,11 @@
    "grammar": []
   },
   {
-   "id": 19,
-   "title": "5A · In the city",
+   "id": 43,
+   "group": "5A · In the city · Mieste",
+   "title": "5A (1/2) · In the city",
    "title_learner": "Mieste",
+   "part": "1/2",
    "words": [
     {
      "text": "art gallery",
@@ -2908,7 +5446,93 @@
     {
      "text": "palace",
      "meaning": "rūmai"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "comp_all",
+     "name": "Comparative adjectives; (not) as … as",
+     "explain": "Trumpi būdvardžiai: -er than (bigger than). Ilgi: more … than. As … as – „toks pat kaip“, not as … as – „ne toks kaip“.",
+     "pattern": "bigger than · more beautiful than · as big as · not as old as",
+     "examples": [
+      {
+       "text": "The tower is taller than the cathedral.",
+       "meaning": "Bokštas aukštesnis už katedrą."
+      },
+      {
+       "text": "The park isn't as big as the stadium.",
+       "meaning": "Parkas nėra toks didelis kaip stadionas."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "The tower is ___ than the cathedral. (tall)",
+       "a": [
+        "taller"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The museum is ___ than the park. (interesting)",
+       "a": [
+        "more interesting"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The park isn't ___ big as the stadium.",
+       "a": [
+        "as"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The bridge is as old ___ the palace.",
+       "a": [
+        "as"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "This square is ___ than that one. (beautiful)",
+       "a": [
+        "more beautiful"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Bokštas aukštesnis už katedrą.",
+       "a": [
+        "The tower is taller than the cathedral."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Parkas nėra toks didelis kaip stadionas.",
+       "a": [
+        "The park isn't as big as the stadium."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Muziejus įdomesnis už parką.",
+       "a": [
+        "The museum is more interesting than the park."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 44,
+   "group": "5A · In the city · Mieste",
+   "title": "5A (2/2) · In the city",
+   "title_learner": "Mieste",
+   "part": "2/2",
+   "words": [
     {
      "text": "park",
      "meaning": "parkas"
@@ -3021,9 +5645,11 @@
    ]
   },
   {
-   "id": 20,
-   "title": "5B · In the country",
+   "id": 45,
+   "group": "5B · In the country · Kaime",
+   "title": "5B (1/2) · In the country",
    "title_learner": "Kaime",
+   "part": "1/2",
    "words": [
     {
      "text": "hill",
@@ -3044,7 +5670,95 @@
     {
      "text": "forest",
      "meaning": "miškas"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "sup_all",
+     "name": "Superlative adjectives",
+     "explain": "Trumpi būdvardžiai: the …-est (the highest). Ilgi: the most … (the most beautiful). Išimtys: good → the best, bad → the worst, far → the furthest.",
+     "pattern": "the + …-est · the most + būdvardis",
+     "examples": [
+      {
+       "text": "This is the highest hill.",
+       "meaning": "Tai aukščiausia kalva."
+      },
+      {
+       "text": "It's the most beautiful view.",
+       "meaning": "Tai pats gražiausias vaizdas."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "This is the ___ hill. (high)",
+       "a": [
+        "highest"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "It's the ___ view. (beautiful)",
+       "a": [
+        "most beautiful"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "This is the ___ day of the holiday! (good)",
+       "a": [
+        "best"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "The village is the ___ place. (quiet)",
+       "a": [
+        "quietest"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "That was the ___ film. (bad)",
+       "a": [
+        "worst"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Tai aukščiausia kalva.",
+       "a": [
+        "This is the highest hill.",
+        "It's the highest hill."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Tai gražiausias vaizdas.",
+       "a": [
+        "It's the most beautiful view.",
+        "This is the most beautiful view."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Kuri vieta geriausia?",
+       "a": [
+        "Which place is the best?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 46,
+   "group": "5B · In the country · Kaime",
+   "title": "5B (2/2) · In the country",
+   "title_learner": "Kaime",
+   "part": "2/2",
+   "words": [
     {
      "text": "harbour",
      "meaning": "uostas"
@@ -3147,9 +5861,11 @@
    ]
   },
   {
-   "id": 21,
-   "title": "5C · Out and about",
+   "id": 47,
+   "group": "5C · Out and about · Po miestą",
+   "title": "5C (1/2) · Out and about",
    "title_learner": "Po miestą",
+   "part": "1/2",
    "words": [
     {
      "text": "behind",
@@ -3182,7 +5898,94 @@
     {
      "text": "opposite",
      "meaning": "priešais (kitoje pusėje)"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "articles",
+     "name": "Articles: the, a / an",
+     "explain": "A/an – kai kalbame apie daiktą pirmą kartą arba bet kurį (a museum). The – kai aišku, apie kurį kalbame, arba jis vienintelis (the museum next to the park).",
+     "pattern": "There's a café. The café is next to the bank.",
+     "examples": [
+      {
+       "text": "There's an aquarium near the port.",
+       "meaning": "Netoli uosto yra akvariumas."
+      },
+      {
+       "text": "The aquarium is opposite the town hall.",
+       "meaning": "Akvariumas yra priešais rotušę."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "There's ___ aquarium near the port. (a / an)",
+       "a": [
+        "an"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "There's a café. ___ café is next to the bank. (A / The)",
+       "a": [
+        "The"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Look at ___ moon! (a / the)",
+       "a": [
+        "the"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "I saw ___ dolphin in the harbour. (a / an)",
+       "a": [
+        "a"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "My uncle is ___ engineer. (a / an)",
+       "a": [
+        "an"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Netoli uosto yra akvariumas.",
+       "a": [
+        "There's an aquarium near the port."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Akvariumas yra priešais rotušę.",
+       "a": [
+        "The aquarium is opposite the town hall."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mano mama yra mokytoja.",
+       "a": [
+        "My mum is a teacher.",
+        "My mother is a teacher."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 48,
+   "group": "5C · Out and about · Po miestą",
+   "title": "5C (2/2) · Out and about",
+   "title_learner": "Po miestą",
+   "part": "2/2",
+   "words": [
     {
      "text": "over",
      "meaning": "virš"
@@ -3292,9 +6095,11 @@
    ]
   },
   {
-   "id": 22,
-   "title": "5D · A tour of the city",
+   "id": 49,
+   "group": "5D · A tour of the city · Ekskursija po miestą",
+   "title": "5D (1/2) · A tour of the city",
    "title_learner": "Ekskursija po miestą",
+   "part": "1/2",
    "words": [
     {
      "text": "Excuse me, how do I find the nearest …?",
@@ -3319,7 +6124,17 @@
     {
      "text": "Can you see that … over there?",
      "meaning": "Ar matote tą … ten?"
-    },
+    }
+   ],
+   "grammar": []
+  },
+  {
+   "id": 50,
+   "group": "5D · A tour of the city · Ekskursija po miestą",
+   "title": "5D (2/2) · A tour of the city",
+   "title_learner": "Ekskursija po miestą",
+   "part": "2/2",
+   "words": [
     {
      "text": "Certainly.",
      "meaning": "Žinoma."
@@ -3348,9 +6163,11 @@
    "grammar": []
   },
   {
-   "id": 23,
-   "title": "6A · Problems",
+   "id": 51,
+   "group": "6A · Problems · Problemos",
+   "title": "6A (1/2) · Problems",
    "title_learner": "Problemos",
+   "part": "1/2",
    "words": [
     {
      "text": "wake up",
@@ -3379,7 +6196,94 @@
     {
      "text": "put on",
      "meaning": "užsidėti, apsivilkti"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "should",
+     "name": "should / shouldn't – patarimai",
+     "explain": "Should + veiksmažodis – kai patariame (reikėtų). Shouldn't – kai patariame nedaryti.",
+     "pattern": "You should + veiksmažodis · You shouldn't + veiksmažodis · Should I …?",
+     "examples": [
+      {
+       "text": "You should switch off your phone.",
+       "meaning": "Tau reikėtų išjungti telefoną."
+      },
+      {
+       "text": "You shouldn't sleep in.",
+       "meaning": "Tau nereikėtų pramiegoti."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "You ___ switch off your phone. (reikėtų)",
+       "a": [
+        "should"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "You ___ sleep in. (nereikėtų)",
+       "a": [
+        "shouldn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "___ I wear a coat? (should)",
+       "a": [
+        "Should"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "He should ___ to bed early. (go)",
+       "a": [
+        "go"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ eat so many sweets. (nereikėtų)",
+       "a": [
+        "shouldn't"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Tau reikėtų išjungti telefoną.",
+       "a": [
+        "You should switch off your phone.",
+        "You should turn off your phone."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Tau nereikėtų pramiegoti.",
+       "a": [
+        "You shouldn't sleep in."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Ką man reikėtų daryti?",
+       "a": [
+        "What should I do?"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 52,
+   "group": "6A · Problems · Problemos",
+   "title": "6A (2/2) · Problems",
+   "title_learner": "Problemos",
+   "part": "2/2",
+   "words": [
     {
      "text": "take off",
      "meaning": "nusiimti, nusivilkti"
@@ -3485,9 +6389,11 @@
    ]
   },
   {
-   "id": 24,
-   "title": "6B · Rules",
+   "id": 53,
+   "group": "6B · Rules · Taisyklės",
+   "title": "6B (1/3) · Rules",
    "title_learner": "Taisyklės",
+   "part": "1/3",
    "words": [
     {
      "text": "quickly",
@@ -3512,7 +6418,94 @@
     {
      "text": "sadly",
      "meaning": "liūdnai"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "must",
+     "name": "must / mustn't – taisyklės",
+     "explain": "Must – privaloma. Mustn't – draudžiama, negalima.",
+     "pattern": "You must + veiksmažodis · You mustn't + veiksmažodis",
+     "examples": [
+      {
+       "text": "You must cross the road carefully.",
+       "meaning": "Gatvę privalai pereiti atsargiai."
+      },
+      {
+       "text": "You mustn't feed the animals.",
+       "meaning": "Negalima šerti gyvūnų."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "You ___ cross the road carefully. (privalai)",
+       "a": [
+        "must"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "You ___ feed the animals. (negalima)",
+       "a": [
+        "mustn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ be quiet in the library. (privalome)",
+       "a": [
+        "must"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "You ___ run near the pool. (negalima)",
+       "a": [
+        "mustn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Students must ___ their homework. (do)",
+       "a": [
+        "do"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Tu privalai būti atsargus.",
+       "a": [
+        "You must be careful."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Negalima šerti gyvūnų.",
+       "a": [
+        "You mustn't feed the animals."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes privalome eiti lėtai.",
+       "a": [
+        "We must walk slowly.",
+        "We must go slowly."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 54,
+   "group": "6B · Rules · Taisyklės",
+   "title": "6B (2/3) · Rules",
+   "title_learner": "Taisyklės",
+   "part": "2/3",
+   "words": [
     {
      "text": "nicely",
      "meaning": "gražiai"
@@ -3536,7 +6529,94 @@
     {
      "text": "dangerously",
      "meaning": "pavojingai"
-    },
+    }
+   ],
+   "grammar": [
+    {
+     "id": "must",
+     "name": "must / mustn't – taisyklės",
+     "explain": "Must – privaloma. Mustn't – draudžiama, negalima.",
+     "pattern": "You must + veiksmažodis · You mustn't + veiksmažodis",
+     "examples": [
+      {
+       "text": "You must cross the road carefully.",
+       "meaning": "Gatvę privalai pereiti atsargiai."
+      },
+      {
+       "text": "You mustn't feed the animals.",
+       "meaning": "Negalima šerti gyvūnų."
+      }
+     ],
+     "requires": [],
+     "exercises": [
+      {
+       "type": "fill",
+       "q": "You ___ cross the road carefully. (privalai)",
+       "a": [
+        "must"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "You ___ feed the animals. (negalima)",
+       "a": [
+        "mustn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "We ___ be quiet in the library. (privalome)",
+       "a": [
+        "must"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "You ___ run near the pool. (negalima)",
+       "a": [
+        "mustn't"
+       ]
+      },
+      {
+       "type": "fill",
+       "q": "Students must ___ their homework. (do)",
+       "a": [
+        "do"
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Tu privalai būti atsargus.",
+       "a": [
+        "You must be careful."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Negalima šerti gyvūnų.",
+       "a": [
+        "You mustn't feed the animals."
+       ]
+      },
+      {
+       "type": "translate",
+       "lt": "Mes privalome eiti lėtai.",
+       "a": [
+        "We must walk slowly.",
+        "We must go slowly."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 55,
+   "group": "6B · Rules · Taisyklės",
+   "title": "6B (3/3) · Rules",
+   "title_learner": "Taisyklės",
+   "part": "3/3",
+   "words": [
     {
      "text": "well",
      "meaning": "gerai"
@@ -3638,9 +6718,11 @@
    ]
   },
   {
-   "id": 25,
+   "id": 56,
+   "group": "6C · Dilemmas · Dilemos",
    "title": "6C · Dilemmas",
    "title_learner": "Dilemos",
+   "part": "",
    "words": [
     {
      "text": "dilemma",
@@ -3754,9 +6836,11 @@
    ]
   },
   {
-   "id": 26,
-   "title": "6D · Go on. Give it a try!",
+   "id": 57,
+   "group": "6D · Go on. Give it a try! · Nagi, pabandyk!",
+   "title": "6D (1/2) · Go on. Give it a try!",
    "title_learner": "Nagi, pabandyk!",
+   "part": "1/2",
    "words": [
     {
      "text": "Come on, you can do it.",
@@ -3781,7 +6865,17 @@
     {
      "text": "You really must do it.",
      "meaning": "Tu būtinai turi tai padaryti."
-    },
+    }
+   ],
+   "grammar": []
+  },
+  {
+   "id": 58,
+   "group": "6D · Go on. Give it a try! · Nagi, pabandyk!",
+   "title": "6D (2/2) · Go on. Give it a try!",
+   "title_learner": "Nagi, pabandyk!",
+   "part": "2/2",
+   "words": [
     {
      "text": "I'll think about it.",
      "meaning": "Pagalvosiu."

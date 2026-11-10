@@ -16,8 +16,8 @@ let ui = {};   // the words on the page (buttons, headings) in the course's lang
 // 0. The teacher's settings, saved in this browser
 const DEFAULTS = {
   mode: "drill",                                              // "drill" or "chat"
-  types: { word: true, fill: true, translate: true, listen: true },
-  count: 12,                                                  // exercises per round
+  types: { word: true, sentence: true, fill: true, translate: true, listen: true },
+  count: 15,                                                  // at most this many exercises per round
   strict: true,                                               // check capitals and punctuation
   speak: true,                                                // say the right answer aloud
   focus: "",                                                  // instruction for William
@@ -234,13 +234,21 @@ function questionText(item) {
   if (item.type === "phrase") return ui.q_phrase.replace("{lt}", item.lt);
   if (item.type === "fill") return `${ui.q_fill}\n${item.q}`;
   if (item.type === "translate") return `${ui.q_translate}\n${item.lt}`;
+  if (item.type === "sentence") {
+    const words = item.words.map((w) => `„${w}“`).join(` ${ui.or} `);
+    const text = ui.q_sentence.replace("{w}", words);
+    return item.pattern ? `${text}\n${ui.q_sentence_pattern.replace("{p}", item.pattern)}` : text;
+  }
   return ui.q_listen;
 }
 
 function showItem() {
   const item = current();
+  round.waiting = false;          // the new question is on the screen: the buttons work again
   round.attempt = 1;
   round.copying = false;
+  round.copyItem = null;          // what the student copies after a mistake (if not the exercise itself)
+  round.copyAnswer = "";
   const counter = round.reviewing ? "" : `${ui.exercise} ${round.i + 1}/${round.total}\n`;
   addMessage("william task", counter + questionText(item), item.type === "listen" ? item.say : null);
   if (item.type === "listen") speak(item.say);
@@ -253,6 +261,7 @@ function missed(item) {
 }
 
 function nextItem() {
+  round.waiting = true;           // a short pause before the next question: the buttons wait too
   round.i += 1;
   if (round.i < round.items.length) {
     setTimeout(showItem, 700);
@@ -291,7 +300,7 @@ async function answerItem(text) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         course: courseSelect.value,
-        item,
+        item: (round.copying && round.copyItem) || item,
         answer: text,
         strict: settings.strict,
         explain: !round.copying && round.attempt === 1,
@@ -321,21 +330,35 @@ async function answerItem(text) {
     return nextItem();
   }
 
-  // c) Only capitals, punctuation or spelling: one more try
+  // c) The student's sentence is missing the word, is too short, or is not about the lesson: try again
+  if (r.result === "retry") {
+    addMessage("william", `${r.message}\n${ui.try_again}`);
+    return;
+  }
+
+  // d) Only capitals, punctuation or spelling: one more try
   if ((r.result === "form" || r.result === "spelling") && round.attempt === 1) {
     round.attempt = 2;
     addMessage("william", `${r.message}\n${ui.try_again}`);
     return;
   }
 
-  // d) A real mistake (or the second try didn't work): show the answer, the student writes it once
+  // e) A real mistake (or the second try didn't work): show the answer, the student writes it once
   let reply = r.message;
   if (r.result !== "wrong") reply += "\n" + ui.answer_is.replace("{a}", r.expected);
   if (r.explain) reply += "\n" + r.explain;
   addMessage("william", `${reply}\n${ui.copy}`, r.expected);
   if (settings.speak) speak(r.expected);
   missed(item);
+  copy(item, r.expected);
+}
+
+// After a mistake the student writes the right answer once.
+// For their own sentence, the "right answer" is William's corrected version of it.
+function copy(item, answer) {
   round.copying = true;
+  round.copyAnswer = answer;
+  round.copyItem = item.type === "sentence" ? { type: "translate", lt: "", a: [answer] } : null;
 }
 
 // Helper buttons
@@ -343,26 +366,65 @@ function hintFor(text) {                     // "can't swim" -> "c____ s___"
   return text.replace(/[A-Za-z]+/g, (w) => w[0] + "_".repeat(w.length - 1));
 }
 
+// Can the helper buttons be used right now? (not between questions, not while William is checking)
+function helperReady() {
+  return round && current() && !round.waiting && !sendButton.disabled;
+}
+
 $("hint-btn").addEventListener("click", () => {
+  if (!helperReady()) return;
   const item = current();
-  if (!item || round.copying) return;
-  addMessage("william", "💡 " + hintFor(item.a[0]));
+  if (round.copying) {                        // copying after a mistake: show the answer again
+    addMessage("william", "💡 " + ui.answer_is.replace("{a}", round.copyAnswer), round.copyAnswer);
+    return input.focus();
+  }
+  // own sentence: show how to start; other exercises: the first letters of the answer
+  const hint = item.type === "sentence"
+    ? (item.pattern ? ui.q_sentence_pattern.replace("{p}", item.pattern) + "\n" : "") + ui.sentence_starters
+    : hintFor(item.a[0]);
+  addMessage("william", "💡 " + hint);
   input.focus();
 });
 
-$("dontknow-btn").addEventListener("click", () => {
+$("dontknow-btn").addEventListener("click", async () => {
+  if (!helperReady()) return;
   const item = current();
-  if (!item || round.copying) return;
   addMessage("me", ui.dont_know);
-  const answer = rightAnswer(item);
-  addMessage("william", `${ui.answer_is.replace("{a}", answer)}\n${ui.copy}`, answer);
+  if (round.copying) {                        // still stuck while copying: show it once more and go on
+    addMessage("william", ui.answer_is.replace("{a}", round.copyAnswer), round.copyAnswer);
+    return nextItem();
+  }
+  let answer = "";
+  if (item.type === "sentence") {             // William writes an example sentence with the words
+    busy(true);
+    try {
+      const response = await fetch("/api/example", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ course: courseSelect.value, item }),
+      });
+      answer = (await response.json()).sentence || "";
+    } catch (error) {
+      answer = "";
+    }
+    busy(false);
+    if (!answer) {                             // William had no example: say so and go on
+      addMessage("william", ui.skip);
+      return nextItem();
+    }
+    addMessage("william", `${ui.example.replace("{a}", answer)}\n${ui.copy}`, answer);
+  } else {
+    answer = rightAnswer(item);
+    addMessage("william", `${ui.answer_is.replace("{a}", answer)}\n${ui.copy}`, answer);
+  }
   if (settings.speak) speak(answer);
   missed(item);
-  round.copying = true;
+  copy(item, answer);
   input.focus();
 });
 
 $("listen-btn").addEventListener("click", () => {
+  if (!helperReady()) return;
   const item = current();
   if (item && item.say) speak(item.say);
   input.focus();
@@ -372,7 +434,7 @@ $("listen-btn").addEventListener("click", () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();          // stop the browser from reloading the page
   const text = input.value.trim();
-  if (!text || sendButton.disabled) return;
+  if (!text || sendButton.disabled || (round && round.waiting)) return;   // wait for the next question
 
   input.value = "";
   addMessage("me", text);
@@ -457,7 +519,7 @@ function teacherForm() {
 
   const types = el("fieldset");
   types.appendChild(el("legend", "", ui.t_types));
-  for (const t of ["word", "fill", "translate", "listen"]) {
+  for (const t of ["word", "sentence", "fill", "translate", "listen"]) {
     const l = el("label");
     const c = el("input");
     c.type = "checkbox"; c.name = "type-" + t; c.checked = settings.types[t];
@@ -507,8 +569,8 @@ $("teacher").addEventListener("close", () => {
   const field = (name) => $("teacher-form").elements.namedItem(name);
   settings = {
     mode: field("mode").value,
-    types: Object.fromEntries(["word", "fill", "translate", "listen"].map((t) => [t, field("type-" + t).checked])),
-    count: Math.min(40, Math.max(3, Number(field("count").value) || 12)),
+    types: Object.fromEntries(["word", "sentence", "fill", "translate", "listen"].map((t) => [t, field("type-" + t).checked])),
+    count: Math.min(40, Math.max(3, Number(field("count").value) || 15)),
     strict: field("strict").checked,
     speak: field("speak").checked,
     focus: field("focus").value.trim(),
@@ -554,11 +616,25 @@ async function loadLessons() {
   const response = await fetch(`/api/courses/${courseSelect.value}/lessons`);
   const lessons = await response.json();
   lessonSelect.innerHTML = "";
+  let group = null;
   for (const lesson of lessons) {
+    // a book lesson split into parts: the parts go under one heading ("3A · Wild animals · Laukiniai gyvūnai")
+    if (lesson.part) {
+      if (!group || group.label !== lesson.group) {
+        group = document.createElement("optgroup");
+        group.label = lesson.group;
+        lessonSelect.appendChild(group);
+      }
+    } else {
+      group = null;
+    }
     const option = document.createElement("option");
     option.value = lesson.id;
-    option.textContent = `${lesson.title} · ${lesson.title_learner}`;
-    lessonSelect.appendChild(option);
+    option.textContent = lesson.part ? `${lesson.title_learner} ${lesson.part}` : `${lesson.title} · ${lesson.title_learner}`;
+    (group || lessonSelect).appendChild(option);
+  }
+  if (!lessons.some((l) => String(l.id) === localStorage.getItem("lesson-" + courseSelect.value))) {
+    localStorage.removeItem("lesson-" + courseSelect.value);   // lesson numbers changed: start at the beginning
   }
   lessonSelect.value = localStorage.getItem("lesson-" + courseSelect.value) || lessons[0].id;
   await startLesson();

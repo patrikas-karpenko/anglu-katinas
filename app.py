@@ -55,6 +55,11 @@ DEFAULT_UI = {
     "no_model": "Miau… I can't reach my brain right now. Check LLM_API_KEY.",
     "q_word": "How do you say “{lt}” in English?", "q_phrase": "How do you say this in English: “{lt}”",
     "q_fill": "Fill in the gap:", "q_translate": "Translate into English:", "q_listen": "Listen and write what you hear.",
+    "q_sentence": "Now make a sentence with {w}.", "or": "or", "q_sentence_pattern": "You can use: {p}",
+    "sentence_starters": "You can start like this: I like … / I can see … / This is … / My … is …",
+    "missing_word": "Your sentence needs the word {w}.", "too_short": "Write a whole sentence – at least 3 words.",
+    "not_for_lesson": "Let's write another sentence – about the lesson words.", "example": "For example: {a}", "skip": "OK, let's go on.",
+    "end_mark": "A sentence ends with a full stop (.) or a question mark (?).",
     "exercise": "Exercise", "review": "Let's try the tricky ones again:",
     "praise": ["Great!", "Correct!", "Well done!", "Yes!"],
     "also_right": "Also correct: {a}", "inner_punct": "Don't forget the punctuation: {a}",
@@ -73,7 +78,8 @@ DEFAULT_UI = {
     "focus_on": "Teacher's focus: {f}",
     "t_title": "Teacher settings", "t_mode": "Mode", "t_drill": "Exercises", "t_chat": "Chat with William",
     "t_types": "Exercise types", "t_word": "Words and phrases", "t_fill": "Fill in the gap",
-    "t_translate": "Translate sentences", "t_listen": "Listening (dictation)", "t_count": "Exercises per round",
+    "t_translate": "Translate sentences", "t_listen": "Listening (dictation)",
+    "t_sentence": "Make sentences with the words", "t_count": "Most exercises per round",
     "t_strict": "Check capital letters and punctuation", "t_speak": "Say the right answer aloud",
     "t_focus": "Instruction for William (optional)", "t_focus_ph": "e.g. colours with present simple",
     "t_save": "Save", "t_cancel": "Cancel",
@@ -203,7 +209,8 @@ def lessons(course_id: str):
     course = COURSES.get(course_id)
     if not course:
         raise HTTPException(status_code=404, detail="No such course")
-    return [{"id": l["id"], "title": l["title"], "title_learner": l["title_learner"]} for l in course["lessons"]]
+    return [{"id": l["id"], "title": l["title"], "title_learner": l["title_learner"],
+             "group": l.get("group", ""), "part": l.get("part", "")} for l in course["lessons"]]
 
 
 @app.get("/api/courses/{course_id}/lessons/{lesson_id}")
@@ -317,11 +324,76 @@ In ONE short, simple sentence in {learner}, explain the grammar mistake to a chi
 (for example: after "he" the verb gets -s). No greeting, do not repeat the correct answer."""
 
 
+def william_system(course):
+    return WILLIAM.format(target=course["target_language"], learner=course["learner_language"],
+                          format_example=course["format_example"], instructions=course["instructions"])
+
+
+def as_sentence(text):
+    """Capital letter at the start and . at the end (if William forgot)."""
+    text = text.strip().strip('"„“')
+    if text and not text.endswith(checker.END):
+        text += "."
+    return text[:1].upper() + text[1:]
+
+
+JUDGE = """A Lithuanian child (A1 level) was asked to write an English sentence with the word(s) {words}.
+The child wrote: "{answer}"
+
+Check the GRAMMAR and WORD CHOICE only. Ignore capital letters and punctuation (they are checked separately).
+Any sensible meaning is fine – it does not have to be true. Very short, simple sentences are fine.
+Reply with JSON only:
+{{"ok": true or false,
+  "fixed": "the corrected sentence, with correct capital letters and punctuation",
+  "why": "if not ok: ONE short, simple sentence in {learner} that explains the mistake to a child; else empty",
+  "appropriate": true or false}}
+"appropriate" is false if the sentence is rude, sexual, about violence or otherwise not OK for a school child."""
+
+
+def judge_sentence(course, item, answer):
+    """William checks the grammar of the student's own sentence. Returns (ok, fixed, why, appropriate)."""
+    prompt = JUDGE.format(words=" / ".join(item["words"]), answer=answer, learner=course["learner_language"])
+    text = ask_model([{"role": "system", "content": william_system(course)}, {"role": "user", "content": prompt}],
+                     max_tokens=250, temperature=0)
+    match = re.search(r"\{.*\}", text, re.S)
+    try:
+        verdict = json.loads(match.group(0)) if match else None
+    except json.JSONDecodeError:
+        verdict = None
+    if not isinstance(verdict, dict):
+        return True, as_sentence(answer), "", True           # William didn't answer: trust the code checks
+    fixed = as_sentence(str(verdict.get("fixed") or answer))
+    ok = bool(verdict.get("ok", True))
+    if not ok and checker.content(fixed)[0] == checker.content(answer)[0]:
+        ok = True                                              # only capitals/punctuation differ: not a grammar mistake
+    return ok, fixed, str(verdict.get("why") or "")[:300], verdict.get("appropriate", True) is not False
+
+
+def check_own_sentence(course, req):
+    ui = course["ui"]
+    pre = checker.check_sentence(req.item, req.answer[:300], req.strict)
+    if pre["result"] == "short":
+        return {"result": "retry", "expected": "", "message": ui["too_short"], "explain": ""}
+    if pre["result"] == "missing":
+        return {"result": "retry", "expected": "", "message": ui["missing_word"].format(w=pre["word"]), "explain": ""}
+    ok, fixed, why, appropriate = judge_sentence(course, req.item, req.answer[:300])
+    if not appropriate:
+        return {"result": "retry", "expected": "", "message": ui["not_for_lesson"], "explain": ""}
+    if not ok:
+        return {"result": "wrong", "expected": fixed, "explain": why,
+                "message": f"{ui['mistake']} {ui['correct_is'].format(a=fixed)}"}
+    if pre["result"] == "form":
+        return {"result": "form", "expected": fixed, "message": feedback(ui, pre | {"result": "form"}), "explain": ""}
+    return {"result": "right", "expected": as_sentence(req.answer), "message": random.choice(ui["praise"]), "explain": ""}
+
+
 @app.post("/api/check")
 def check(req: CheckRequest):
     course = COURSES.get(req.course)
     if not course:
         raise HTTPException(status_code=404, detail="No such course")
+    if req.item.get("type") == "sentence":
+        return check_own_sentence(course, req)
     result = checker.check(req.item, req.answer[:300], req.strict)
     out = {"result": result["result"], "expected": result["expected"], "message": feedback(course["ui"], result),
            "explain": ""}
@@ -329,11 +401,32 @@ def check(req: CheckRequest):
     if result["result"] == "wrong" and req.explain and req.item.get("type") in ("fill", "translate"):
         prompt = EXPLAIN.format(q=question_text(req.item), a=result["expected"], s=req.answer[:300],
                                 learner=course["learner_language"])
-        system = WILLIAM.format(target=course["target_language"], learner=course["learner_language"],
-                                format_example=course["format_example"], instructions=course["instructions"])
-        out["explain"] = ask_model([{"role": "system", "content": system}, {"role": "user", "content": prompt}],
-                                   max_tokens=120, temperature=0.3)[:300]
+        out["explain"] = ask_model([{"role": "system", "content": william_system(course)},
+                                    {"role": "user", "content": prompt}], max_tokens=120, temperature=0.3)[:300]
     return out
+
+
+class ExampleRequest(BaseModel):
+    course: str
+    item: dict
+
+
+@app.post("/api/example")
+def example(req: ExampleRequest):
+    """'Nežinau' on a make-a-sentence exercise: William writes one example sentence to copy."""
+    course = COURSES.get(req.course)
+    if not course or req.item.get("type") != "sentence":
+        raise HTTPException(status_code=404, detail="No such course")
+    words = " / ".join(req.item["words"])
+    prompt = (f"Write ONE very simple English sentence (at most 7 words) for a child, using the word(s): {words}. "
+              f"{'Use this pattern if you can: ' + req.item['pattern'] if req.item.get('pattern') else ''} "
+              "Reply with the sentence only.")
+    reply = ask_model([{"role": "user", "content": prompt}], max_tokens=60, temperature=0.5)
+    sentence = as_sentence(reply.splitlines()[0]) if reply.strip() else ""
+    words_in = checker.content(sentence)[0]
+    if len(words_in) < 3 or not any(checker.has_word(words_in, w) for w in req.item["words"]):
+        return {"sentence": ""}
+    return {"sentence": sentence}
 
 
 # ---- 5. Serve the page (index.html, style.css, chat.js) --------------------
