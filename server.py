@@ -2,9 +2,9 @@
 """
 Anglų katinas – a terminal-style English drilling app for special-needs learners.
 
-Runs fully on this computer: a small Python web server (no packages needed) +
-a local Qwen model through Ollama. Start it with:  python3 server.py
-Student data is kept in ./data/<name>.json and never leaves the computer.
+Start it with:  python server.py   (Windows: py server.py)
+The language model comes from an online API (key in LLM_API_KEY) or from a local Ollama.
+Student progress is kept in ./data/<name>.json on this computer.
 """
 import datetime
 import json
@@ -30,22 +30,26 @@ DATA = BASE / "data"
 STATIC = BASE / "static"
 
 DEFAULTS = {
+    "cat_name": "William",
     "ollama_url": "http://localhost:11434",
     "model": "qwen3:8b",
-    "think": False,          # Qwen3 "thinking" off = faster answers. Set null for models without it.
+    "think": False,
     "temperature": 0.4,
     "timeout": 120,
     "port": 8000,
     "open_browser": True,
     "max_level": "B1",
     "drill_items": 6,        # new exercises per lesson
-    "review_items": 2,       # old mistakes to repeat per lesson
-    "chat_turns": 3,         # short conversation at the end of a lesson (0 = off)
+    "review_items": 2,       # old mistakes repeated per lesson
+    "chat_turns": 3,         # short conversation at the end (0 = off)
+    "full_sentences": "encourage",   # "encourage" = bonus stars, "require" = must write the sentence
+    "show_student_names": True,      # list known students on the start screen
 }
 
 
+# ------------------------------------------------------------------ settings
 def load_dotenv():
-    """Read KEY=VALUE lines from .env (same format as your other projects). Real env vars win."""
+    """Read KEY=VALUE lines from .env. Real environment variables (e.g. Codespaces secrets) win."""
     f = BASE / ".env"
     if not f.exists():
         return
@@ -62,22 +66,23 @@ def load_config():
     f = BASE / "config.json"
     if f.exists():
         cfg.update(json.loads(f.read_text("utf-8")))
-    # Online API (any OpenAI-compatible one, e.g. Qwen on Alibaba Cloud). If a key is set, it is used
-    # instead of Ollama.
-    cfg["api_key"] = os.environ.get("LLM_API_KEY", "").strip()
-    groq = cfg["api_key"].startswith("gsk_")      # Groq keys start with gsk_
-    cfg["api_url"] = os.environ.get("LLM_BASE_URL", "").strip() or \
-        ("https://api.groq.com/openai/v1" if groq else "https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
-    if cfg["api_key"]:
+    key = os.environ.get("LLM_API_KEY", "").strip()
+    groq = key.startswith("gsk_")                         # Groq keys start with gsk_
+    cfg["api_key"] = key
+    cfg["api_url"] = os.environ.get("LLM_BASE_URL", "").strip() or (
+        "https://api.groq.com/openai/v1" if groq else "https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
+    if key:
         cfg["model"] = os.environ.get("LLM_MODEL", "").strip() or ("qwen/qwen3.8-27b" if groq else "qwen-flash")
-    if os.environ.get("KATINAS_MODEL"):
-        cfg["model"] = os.environ["KATINAS_MODEL"]
-    if os.environ.get("KATINAS_PORT"):
-        cfg["port"] = int(os.environ["KATINAS_PORT"])
+    cfg["teacher_pin"] = os.environ.get("TEACHER_PIN", "").strip()
+    if os.environ.get("PORT"):
+        cfg["port"] = int(os.environ["PORT"])
+    if os.environ.get("CODESPACES"):                      # no local browser in Codespaces
+        cfg["open_browser"] = False
     return cfg
 
 
 CFG = load_config()
+CAT = CFG["cat_name"]
 LOCK = threading.Lock()
 SESSIONS = {}
 MASTERED = 0.8
@@ -96,7 +101,7 @@ def log(*a):
     print("[katinas]", *a, file=sys.stderr, flush=True)
 
 
-# ------------------------------------------------------------------ profiles
+# ------------------------------------------------------------------ student files
 def slug(name):
     s = re.sub(r"[^a-z0-9]+", "-", safety.simplify(name)).strip("-")
     return s[:40] or "mokinys"
@@ -104,7 +109,11 @@ def slug(name):
 
 def load_profile(sl):
     f = DATA / f"{sl}.json"
-    return json.loads(f.read_text("utf-8")) if f.exists() else None
+    if not f.exists():
+        return None
+    p = json.loads(f.read_text("utf-8"))
+    p.setdefault("plan", {"topics": [], "note": ""})
+    return p
 
 
 def save_profile(p):
@@ -115,11 +124,22 @@ def save_profile(p):
     tmp.replace(f)
 
 
+def all_students():
+    DATA.mkdir(exist_ok=True)
+    out = []
+    for f in sorted(DATA.glob("*.json")):
+        p = json.loads(f.read_text("utf-8"))
+        out.append({"slug": p["slug"], "name": p["name"], "level": p.get("level"),
+                    "sessions": len(p["sessions"]), "alerts": len(p["alerts"])})
+    return out
+
+
 def new_profile(name):
     return {
-        "name": name, "slug": slug(name), "created": now_iso(), "cat_name": None, "interests": "",
+        "name": name, "slug": slug(name), "created": now_iso(), "interests": "",
         "diagnostic_done": False, "level": None, "diagnostic": None,
         "topics": {}, "mistakes": [], "log": [], "sessions": [], "alerts": [],
+        "plan": {"topics": [], "note": ""},
         "stars": 0, "cat": {"full": 70, "t": time.time(), "fed": 0},
     }
 
@@ -162,19 +182,11 @@ def remove_mistake(p, it):
 
 
 def stats(p, s=None):
-    t = CUR.TOPIC_BY_ID.get((s or {}).get("topic", ""))
-    return {"name": p["name"], "cat": p.get("cat_name") or "Murkis", "stars": p["stars"],
-            "level": p.get("level") or "?", "full": fullness(p), "topic": t["title"] if t else ""}
+    return {"name": p["name"], "cat": CAT, "stars": p["stars"], "level": p.get("level") or "?",
+            "full": fullness(p), "topic": (s or {}).get("title", "")}
 
 
-# ------------------------------------------------------------------ model
-def _post(path, body):
-    req = urllib.request.Request(CFG["ollama_url"].rstrip("/") + path, data=json.dumps(body).encode(),
-                                 headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=CFG["timeout"]) as r:
-        return json.loads(r.read())
-
-
+# ------------------------------------------------------------------ language model
 def llm(messages, json_mode=False, max_tokens=300):
     try:
         text = _llm_api(messages, json_mode, max_tokens) if CFG["api_key"] \
@@ -206,18 +218,14 @@ def _llm_api(messages, json_mode, max_tokens):
             return json.loads(r.read())
 
     try:
-        try:
-            data = send(body)
-        except urllib.error.HTTPError as e:
-            err = e.read().decode("utf-8", "replace")
-            if e.code == 400 and ("reasoning" in err or "thinking" in err):
-                body.pop("reasoning_effort", None)  # model doesn't have the switch: try without it
-                body.pop("enable_thinking", None)
-                data = send(body)
-            else:
-                raise RuntimeError(f"API {e.code}: {err[:300]}") from None
+        data = send(body)
     except urllib.error.HTTPError as e:
-        raise RuntimeError(f"API {e.code}: {e.read().decode('utf-8', 'replace')[:300]}") from None
+        err = e.read().decode("utf-8", "replace")
+        if e.code != 400 or not ("reasoning" in err or "thinking" in err):
+            raise RuntimeError(f"API {e.code}: {err[:300]}") from None
+        body.pop("reasoning_effort", None)         # model without that switch: try again without it
+        body.pop("enable_thinking", None)
+        data = send(body)
     return data["choices"][0]["message"].get("content") or ""
 
 
@@ -228,13 +236,18 @@ def _llm_ollama(messages, json_mode, max_tokens):
         body["format"] = "json"
     if CFG.get("think") is not None:
         body["think"] = CFG["think"]
+
+    def send(b):
+        req = urllib.request.Request(CFG["ollama_url"].rstrip("/") + "/api/chat", data=json.dumps(b).encode(),
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=CFG["timeout"]) as r:
+            return json.loads(r.read())
+
     try:
-        data = _post("/api/chat", body)
+        data = send(body)
     except urllib.error.HTTPError:
-        if "think" not in body:
-            raise
-        body.pop("think")          # model without a thinking switch
-        data = _post("/api/chat", body)
+        body.pop("think", None)
+        data = send(body)
     return (data.get("message") or {}).get("content") or ""
 
 
@@ -244,7 +257,7 @@ _API_OK = None
 def model_status():
     global _API_OK
     if CFG["api_key"]:
-        if _API_OK is None:                       # test the key once
+        if _API_OK is None:                        # test the key once
             _API_OK = llm([{"role": "user", "content": "Say OK."}], max_tokens=5) is not None
         return {"ollama": True, "installed": _API_OK, "model": CFG["model"], "api": True}
     try:
@@ -268,14 +281,15 @@ def clean_out(text, fallback):
     return text
 
 
-def system_prompt(p, s):
+def system_prompt(p):
     known = [CUR.TOPIC_BY_ID[t]["focus"] for t, st in p["topics"].items()
              if st["score"] >= MASTERED and t in CUR.TOPIC_BY_ID][:12]
     weak = [CUR.TOPIC_BY_ID[t]["focus"] for t, st in p["topics"].items()
             if st["tries"] and st["score"] < 0.5 and t in CUR.TOPIC_BY_ID][:8]
     recent = "; ".join(f'"{m["ans"]}" instead of "{m["correct"]}"' for m in p["log"][-4:])
-    cat = p.get("cat_name") or "Murkis"
-    return f"""You are {cat}, a kind cartoon cat who helps a Lithuanian school student practise English.
+    note = (p.get("plan") or {}).get("note", "").strip()
+    teacher = f"\nTEACHER'S INSTRUCTION (follow it): {note}\n" if note else ""
+    return f"""You are {CAT}, a kind cartoon cat who helps a Lithuanian school student practise English.
 You are a practice helper. You do not replace the student's real teacher.
 
 STUDENT
@@ -285,9 +299,10 @@ STUDENT
 - Knows well: {', '.join(known) or 'not much yet'}.
 - Needs more practice: {', '.join(weak) or 'unknown'}.
 - Recent mistakes: {recent or 'none'}.
-
+{teacher}
 STYLE
 - English must be very simple (A1-A2): short sentences, common words. Max 3 sentences.
+- Always encourage the student to answer in FULL SENTENCES ("My cat is brown.", not just "brown").
 - When you write Lithuanian, write simple and correct Lithuanian.
 - Be warm and encouraging. Never call the student bad, slow or stupid.
 - Plain text only. No markdown, no emojis, no lists.
@@ -327,17 +342,19 @@ def M(kind, text):
 
 
 def render_item(it, n, total):
-    if it.get("key_seen"):
-        head = "[dar kartą]"
-    else:
-        head = f"[{n}/{total}]" + (" (kartojimas)" if it.get("review") else "")
+    head = "[dar kartą]" if it.get("key_seen") else \
+        f"[{n}/{total}]" + (" (kartojimas)" if it.get("review") else "")
     if it["type"] == "fill":
-        return [M("lt", f"{head} Įrašyk trūkstamą žodį:"), M("q", it["q"])]
+        return [M("lt", f"{head} Įrašyk trūkstamą žodį – arba parašyk visą sakinį (+2 ★):"), M("q", it["q"])]
     if it["type"] == "choose":
         opts = "    ".join(f"{checker.LETTERS[i]}) {o}" for i, o in enumerate(it["opts"]))
-        return [M("lt", f"{head} Pasirink teisingą atsakymą (parašyk raidę):"), M("q", it["q"]), M("opt", opts)]
+        return [M("lt", f"{head} Pasirink: parašyk raidę – arba visą sakinį (+2 ★):"), M("q", it["q"]),
+                M("opt", opts)]
     if it["type"] == "translate":
-        return [M("lt", f"{head} Kaip angliškai bus „{it['q']}“?")]
+        f = checker.frame(it)
+        if f:
+            return [M("lt", f"{head} Kaip angliškai „{it['q']}“? Parašyk visą sakinį (+2 ★):"), M("q", f)]
+        return [M("lt", f"{head} Kaip angliškai „{it['q']}“?")]
     return [M("lt", f"{head} Sudėliok sakinį iš šių žodžių:"), M("q", it["display"])]
 
 
@@ -348,11 +365,11 @@ def reply(p, s, msgs, mood="normal", bubble=None, done=False):
 
 HELP = [
     M("lt", "Kaip atsakyti:"),
-    M("lt", "  • Įrašyk atsakymą ir paspausk Enter."),
-    M("lt", "  • Jei yra variantai a), b), c) – parašyk raidę."),
+    M("lt", "  • Geriausia – parašyk visą sakinį, pvz.: My cat is brown. Gausi 2 ★!"),
+    M("lt", "  • Jei yra variantai a), b), c) – gali parašyti raidę."),
     M("lt", "  • Jei nežinai – parašyk „nežinau“. Tai visai nieko tokio!"),
     M("lt", "  • „kartoti“ – parodysiu klausimą dar kartą."),
-    M("lt", "  • „pabaiga“ – baigsime pamoką."),
+    M("lt", "  • „pabaiga“ – baigsime pamoką. „keisti“ – kitas mokinys."),
     M("lt", "  • Paspausk ant [▶] ir išgirsi, kaip skamba angliškai."),
 ]
 
@@ -374,18 +391,10 @@ def start(name):
 
 # ------------------------------------------------------------------ diagnostic (1st session)
 def start_diagnostic(p, s):
-    out = [M("lt", f"Labas, {p['name']}! Aš esu katinėlis ir padėsiu tau mokytis anglų kalbos.")]
-    if not p.get("cat_name"):
-        s["phase"] = "cat_name"
-        out.append(M("lt", "Pirmiausia – kaip mane pavadinsi? Parašyk man vardą ir paspausk Enter."))
-        return reply(p, s, out, "happy", f"Hello, {p['name']}!")
-    out += ask_interests(p, s)
-    return reply(p, s, out, "happy", f"Hello, {p['name']}!")
-
-
-def ask_interests(p, s):
     s["phase"] = "interests"
-    return [M("lt", "Ką tu labiausiai mėgsti? Parašyk kelis žodžius (pvz.: arkliai, piešimas, Roblox).")]
+    out = [M("lt", f"Labas, {p['name']}! Aš esu katinas {CAT} ir padėsiu tau mokytis anglų kalbos."),
+           M("lt", "Ką tu labiausiai mėgsti? Parašyk kelis žodžius (pvz.: arkliai, piešimas, Roblox).")]
+    return reply(p, s, out, "happy", f"Hello, {p['name']}! I am {CAT}.")
 
 
 def begin_test(p, s):
@@ -439,7 +448,6 @@ def answer_diag(p, s, text):
 
 def finish_diag(p, s, out):
     passed = [b["level"] for b in s["blocks"] if b["passed"]]
-    failed = [b["level"] for b in s["blocks"] if not b["passed"]]
     p["level"] = passed[-1] if passed else "A1 (pradžia)"
     for t in CUR.topics_up_to(CFG["max_level"]):
         topic_state(p, t["id"])["score"] = 0.85 if t["level"] in passed else 0.0
@@ -455,20 +463,14 @@ def finish_diag(p, s, out):
     todo = list(dict.fromkeys(CUR.TOPIC_BY_ID[r["topic"]]["title"] for r in s["results"] if not r["ok"]))[:4]
     save_profile(p)
     s["phase"] = "done"
-    cat = p["cat_name"]
-    out += [
-        M("sys", ""),
-        M("head", "Testas baigtas!"),
-        M("lt", f"Ačiū, {p['name']}! Teisingai atsakei į {len(good)} iš {len(s['results'])} klausimų."),
-    ]
+    out += [M("sys", ""), M("head", "Testas baigtas!"),
+            M("lt", f"Ačiū, {p['name']}! Teisingai atsakei į {len(good)} iš {len(s['results'])} klausimų.")]
     if knows:
         out.append(M("lt", "Tu jau moki: " + ", ".join(knows) + "."))
     if todo:
         out.append(M("lt", "Kartu pasimokysime: " + ", ".join(todo) + "."))
-    out += [
-        M("lt", "Dabar gali pamaitinti katinėlį arba paspausti „Salto“ – jis apsivers ore!"),
-        M("lt", "Jei nori iškart pradėti pirmą pamoką, parašyk „toliau“."),
-    ]
+    out += [M("lt", "Dabar gali pamaitinti katiną arba paspausti „Salto“ – jis apsivers ore!"),
+            M("lt", "Jei nori iškart pradėti pirmą pamoką, parašyk „toliau“.")]
     return reply(p, s, out, "happy", "You did it!", done=True)
 
 
@@ -478,37 +480,55 @@ def choose_topic(p):
     for t in topics:
         if topic_state(p, t["id"])["score"] < MASTERED:
             return t
-    return min(topics, key=lambda t: topic_state(p, t["id"])["last"] or "")   # everything learned: review
+    return min(topics, key=lambda t: topic_state(p, t["id"])["last"] or "")   # all learned: review
+
+
+def lesson_topics(p):
+    """The teacher's chosen topics if there is a plan, otherwise the next topic to learn."""
+    chosen = [CUR.TOPIC_BY_ID[x] for x in (p.get("plan") or {}).get("topics", []) if x in CUR.TOPIC_BY_ID]
+    return chosen or [choose_topic(p)]
 
 
 def start_lesson(p, s):
-    t = choose_topic(p)
-    items = [dict(i, topic=t["id"]) for i in t["items"]]
-    random.shuffle(items)
-    queue = items[: CFG["drill_items"]]
-    others = [m["item"] for m in p["mistakes"] if m["item"]["topic"] != t["id"]]
+    topics = lesson_topics(p)
+    ids = [t["id"] for t in topics]
+    pools = []
+    for t in topics:
+        items = [dict(i, topic=t["id"]) for i in t["items"]]
+        random.shuffle(items)
+        pools.append(items)
+    queue, i = [], 0
+    while len(queue) < CFG["drill_items"] and any(pools):       # take turns from each chosen topic
+        if pools[i % len(pools)]:
+            queue.append(pools[i % len(pools)].pop())
+        i += 1
+    others = [m["item"] for m in p["mistakes"] if m["item"]["topic"] not in ids]
     random.shuffle(others)
-    queue += [dict(i, review=True) for i in others[: CFG["review_items"]]]
-    s.update(phase="drill", topic=t["id"], queue=[checker.prepare(i) for i in queue], pos=0,
-             first_try=0, retry=False, requeued=set(), turns=0)
+    queue += [dict(x, review=True) for x in others[: CFG["review_items"]]]
+    title = " + ".join(t["title"] for t in topics)
+    focus = " + ".join(t["focus"] for t in topics)
+    s.update(phase="drill", topics=ids, title=title, focus=focus, queue=[checker.prepare(x) for x in queue],
+             pos=0, first_try=0, retry=False, requeued=set(), turns=0, want_full=False)
     s["total"] = len(s["queue"])
+    note = (p.get("plan") or {}).get("note", "").strip()
 
     last = next((x["topic"] for x in reversed(p["sessions"]) if x.get("type") == "pamoka"), None)
     greet = None
     if s["llm_ok"]:
-        greet = llm([{"role": "system", "content": system_prompt(p, s)},
+        greet = llm([{"role": "system", "content": system_prompt(p)},
                      {"role": "user", "content":
                       f"Say hello to {p['name']} in one or two very short, happy English sentences. "
                       f"{'Last time we practised: ' + last + '. ' if last else ''}"
-                      f"Today we practise: {t['focus']}. Write nothing else."}], max_tokens=80)
+                      f"Today we practise: {focus}. Write nothing else."}], max_tokens=80)
         s["llm_ok"] = greet is not None
     greet = clean_out(greet, f"Hello, {p['name']}! I am happy to see you. Let's learn English!")
 
     examples = None
     if s["llm_ok"]:
-        raw = llm([{"role": "system", "content": system_prompt(p, s)},
+        raw = llm([{"role": "system", "content": system_prompt(p)},
                    {"role": "user", "content":
-                    f"Write exactly 3 very short, simple English example sentences for: {t['focus']}. "
+                    f"Write exactly 3 very short, simple English example sentences for: {focus}. "
+                    f"{'Follow the teacher: ' + note + '. ' if note else ''}"
                     f"Use things the student likes ({p.get('interests') or 'animals'}). "
                     f"Max 8 words each. One sentence per line. No numbers, no translation, nothing else."}],
                   max_tokens=90)
@@ -516,11 +536,12 @@ def start_lesson(p, s):
         if len(lines) >= 2 and all(len(x.split()) <= 12 for x in lines[:3]) \
                 and all(safety.output_ok(x) for x in lines[:3]):
             examples = lines[:3]
-    examples = examples or t["examples"]
+    examples = examples or [e for t in topics for e in t["examples"]][:3]
 
-    out = [M("cat", greet), M("sys", ""), M("head", f"Šiandienos tema: {t['title']}"), M("lt", t["rule"]),
-           M("lt", "Pavyzdžiai:"), *[M("ex", e) for e in examples], M("sys", ""),
-           M("lt", "Dabar – pratimai! Jei nežinai, parašyk „nežinau“. Pagalba – „pagalba“.")]
+    out = [M("cat", greet), M("sys", ""), M("head", f"Šiandienos tema: {title}")]
+    out += [M("lt", t["rule"]) for t in topics]
+    out += [M("lt", "Pavyzdžiai:"), *[M("ex", e) for e in examples], M("sys", ""),
+            M("lt", "Dabar – pratimai! Rašyk visus sakinius – už juos gausi 2 ★. Nežinai? Parašyk „nežinau“.")]
     out += render_item(s["queue"][0], 1, s["total"])
     return reply(p, s, out, "happy", f"Hello, {p['name']}!")
 
@@ -530,7 +551,7 @@ def explain(p, s, it, ans, t):
     if not s["llm_ok"]:
         return fallback
     q = it.get("display") or it["q"]
-    text = llm([{"role": "system", "content": system_prompt(p, s)},
+    text = llm([{"role": "system", "content": system_prompt(p)},
                 {"role": "user", "content":
                  f"Exercise: {q}\nStudent's answer: {ans}\nCorrect answer: {checker.correct_text(it)}\n"
                  f"Grammar rule (Lithuanian): {t['rule']}\n\n"
@@ -547,20 +568,33 @@ def answer_drill(p, s, text):
     it = s["queue"][s["pos"]]
     t = CUR.TOPIC_BY_ID[it["topic"]]
     v, tip = checker.check(it, text)
+    full = v == "ok" and checker.is_full(it, text)
 
     if v == "near" and not s["retry"]:
         s["retry"] = True
-        return reply(p, s, [M("lt", "Beveik! Pažiūrėk atidžiai ir pabandyk dar kartą.")],
-                     "think", "Almost!")
+        return reply(p, s, [M("lt", "Beveik! Pažiūrėk atidžiai ir pabandyk dar kartą.")], "think", "Almost!")
+    if v == "ok" and not full and it["type"] != "order" and CFG["full_sentences"] == "require" \
+            and not s["want_full"]:
+        s["want_full"] = True
+        return reply(p, s, [M("ok", "Teisingas žodis!"),
+                            M("lt", "Dabar parašyk visą sakinį, pvz.: " + checker.correct_text(it))],
+                     "happy", "Full sentence, please!")
 
     out, mood, bubble = [], "happy", None
     if v == "ok":
         value = 0.5 if s["retry"] else 1.0
-        if not s["retry"] and it.get("key_seen") is None:
+        if not s["retry"] and not it.get("key_seen"):
             s["first_try"] += 1
-        p["stars"] += 1
         bubble = random.choice(PRAISE)
-        out.append(M("ok", f"{bubble}  +1 ★"))
+        if full:
+            p["stars"] += 2
+            out.append(M("ok", f"{bubble} Visas sakinys!  +2 ★"))
+        else:
+            p["stars"] += 1
+            out.append(M("ok", f"{bubble}  +1 ★"))
+            if it["type"] != "order":
+                out.append(M("fix", "Visas sakinys: " + checker.correct_text(it)))
+                out.append(M("lt", "Kitą kartą parašyk visą sakinį – gausi 2 ★!"))
         if tip:
             out.append(M("lt", tip))
         if it.get("review"):
@@ -583,7 +617,7 @@ def answer_drill(p, s, text):
             s["requeued"].add(k)
             s["queue"].append(dict(it, key_seen=True))
     record(p, it["topic"], value)
-    s["retry"] = False
+    s["retry"] = s["want_full"] = False
     s["pos"] += 1
     save_profile(p)
 
@@ -595,16 +629,17 @@ def answer_drill(p, s, text):
 
 # ------------------------------------------------------------------ short conversation
 def chat_system(p, s):
-    t = CUR.TOPIC_BY_ID[s["topic"]]
-    return system_prompt(p, s) + f"""
+    return system_prompt(p) + f"""
 
-NOW: SHORT CONVERSATION PRACTICE. Today's grammar: {t['focus']}.
-Ask simple questions that make the student use today's grammar or words.
+NOW: SHORT CONVERSATION PRACTICE. Today's grammar/words: {s['focus']}.
+Ask simple questions that make the student use today's grammar or words in a full sentence.
 Answer ONLY with a JSON object with exactly these keys:
 "klaida": if the student's last message has a real grammar or word mistake, explain it in ONE short, simple
   Lithuanian sentence. Ignore capital letters, full stops and tiny typos. If there is no real mistake: "".
+  If the student answered with only one or two words, kindly ask (in Lithuanian) for a full sentence.
   If the student wrote in Lithuanian, gently ask them (in Lithuanian) to try in English.
-"pataisyta": the student's sentence written correctly in English, or "" if it was already correct.
+"pataisyta": the student's answer as a correct, full English sentence, or "" if it was already a correct
+  full sentence.
 "atsakymas": your reply in very simple English: one short friendly reaction and one short question. Max 20 words."""
 
 
@@ -620,7 +655,7 @@ def start_chat(p, s, out):
         return finish_lesson(p, s, out)
     s["chat"].append({"role": "assistant", "content": json.dumps({"klaida": "", "pataisyta": "", "atsakymas": q})})
     out += [M("sys", ""), M("head", "Pratimai baigti! Dabar trumpai pasikalbėkime angliškai."),
-            M("lt", "Atsakyk paprastu sakiniu."), M("cat", q)]
+            M("lt", "Atsakyk visu sakiniu."), M("cat", q)]
     return reply(p, s, out, "happy", "Let's talk!")
 
 
@@ -644,7 +679,7 @@ def answer_chat(p, s, text):
         out.append(M("lt", "Nedidelė klaidelė: " + klaida))
     if fixed:
         out.append(M("fix", "Teisingai: " + fixed))
-        p["log"].append({"date": now_iso(), "topic": s["topic"], "q": "(pokalbis)", "ans": text[:80],
+        p["log"].append({"date": now_iso(), "topic": s["topics"][0], "q": "(pokalbis)", "ans": text[:80],
                          "correct": fixed})
     if ans:
         out.append(M("cat", ans))
@@ -657,19 +692,18 @@ def answer_chat(p, s, text):
 
 
 def finish_lesson(p, s, out):
-    t = CUR.TOPIC_BY_ID[s["topic"]]
     done_items = min(s["pos"], len(s["queue"]))
     original = len([i for i in s["queue"][:done_items] if not i.get("key_seen")])
-    p["sessions"].append({"date": now_iso(), "type": "pamoka", "topic": t["title"],
+    p["sessions"].append({"date": now_iso(), "type": "pamoka", "topic": s["title"],
                           "correct": s["first_try"], "total": original})
     save_profile(p)
     s["phase"] = "done"
-    score = topic_state(p, t["id"])["score"]
+    learned = all(topic_state(p, t)["score"] >= MASTERED for t in s["topics"])
     out += [M("sys", ""), M("head", "Pamoka baigta! Puikiai padirbėjai!"),
-            M("lt", f"Iš pirmo karto teisingai: {s['first_try']} iš {original}. Žvaigždučių iš viso: {p['stars']} ★")]
-    out.append(M("lt", f"Tema „{t['title']}“ jau išmokta – kitą kartą eisime toliau!" if score >= MASTERED
-                 else f"Temą „{t['title']}“ dar pakartosime kitą kartą."))
-    out.append(M("lt", "Iki kito karto! Jei nori dar vienos pamokos, parašyk „toliau“."))
+            M("lt", f"Iš pirmo karto teisingai: {s['first_try']} iš {original}. Žvaigždučių iš viso: {p['stars']} ★"),
+            M("lt", f"„{s['title']}“ – jau išmokta, kitą kartą eisime toliau!" if learned
+              else f"„{s['title']}“ dar pakartosime kitą kartą."),
+            M("lt", "Iki kito karto! Jei nori dar vienos pamokos, parašyk „toliau“.")]
     return reply(p, s, out, "happy", "Bye-bye! See you!", done=True)
 
 
@@ -711,14 +745,6 @@ def answer(sl, text):
             return reply(p, s, diag_item(s))
 
     phase = s.get("phase")
-    if phase == "cat_name":
-        cat = re.sub(r"[^\w\s\-']", "", text).strip()[:20]
-        if not cat:
-            return reply(p, s, [M("lt", "Parašyk vardą raidėmis, pavyzdžiui: Murkis.")])
-        p["cat_name"] = cat[0].upper() + cat[1:]
-        save_profile(p)
-        out = [M("lt", f"Miau! Dabar mano vardas – {p['cat_name']}! Ačiū!")] + ask_interests(p, s)
-        return reply(p, s, out, "happy", f"I am {p['cat_name']}!")
     if phase == "interests":
         p["interests"] = text[:100]
         save_profile(p)
@@ -744,6 +770,7 @@ def feed(sl):
     return reply(p, SESSIONS.get(sl), [], "eat", random.choice(YUM))
 
 
+# ------------------------------------------------------------------ teacher
 def report(sl):
     p = load_profile(sl)
     if not p:
@@ -753,6 +780,18 @@ def report(sl):
         st = p["topics"].get(t["id"], {"score": 0, "tries": 0, "correct": 0, "last": None})
         rows.append({"id": t["id"], "level": t["level"], "title": t["title"], **st})
     return {"profile": p, "topics": rows, "mastered": MASTERED}
+
+
+def save_plan(data):
+    if CFG["teacher_pin"] and data.get("pin", "") != CFG["teacher_pin"]:
+        return {"error": "pin"}
+    p = load_profile(data.get("slug", ""))
+    if not p:
+        return {"error": "not found"}
+    topics = [t for t in data.get("topics", []) if t in CUR.TOPIC_BY_ID]
+    p["plan"] = {"topics": topics, "note": str(data.get("note", ""))[:300], "date": now_iso()}
+    save_profile(p)
+    return {"ok": True, "plan": p["plan"]}
 
 
 # ------------------------------------------------------------------ http
@@ -775,15 +814,16 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         u = urlparse(self.path)
         if u.path == "/api/status":
-            return self.send_json({**model_status(), "max_level": CFG["max_level"]})
+            return self.send_json({**model_status(), "max_level": CFG["max_level"], "cat": CAT,
+                                   "pin": bool(CFG["teacher_pin"])})
         if u.path == "/api/students":
-            DATA.mkdir(exist_ok=True)
-            out = []
-            for f in sorted(DATA.glob("*.json")):
-                p = json.loads(f.read_text("utf-8"))
-                out.append({"slug": p["slug"], "name": p["name"], "level": p.get("level"),
-                            "sessions": len(p["sessions"]), "alerts": len(p["alerts"])})
-            return self.send_json(out)
+            return self.send_json(all_students())
+        if u.path == "/api/names":                 # start screen: names only
+            names = [x["name"] for x in all_students()] if CFG["show_student_names"] else []
+            return self.send_json(names)
+        if u.path == "/api/topics":
+            return self.send_json([{"id": t["id"], "level": t["level"], "title": t["title"]}
+                                   for t in CUR.topics_up_to(CFG["max_level"])])
         if u.path == "/api/report":
             return self.send_json(report(parse_qs(u.query).get("name", [""])[0]))
         if u.path in ("/teacher", "/mokytojas"):
@@ -804,6 +844,8 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.send_json(answer(data.get("slug", ""), data.get("text", "")))
             if path == "/api/feed":
                 return self.send_json(feed(data.get("slug", "")))
+            if path == "/api/plan":
+                return self.send_json(save_plan(data))
         self.send_json({"error": "not found"}, 404)
 
 
@@ -815,17 +857,18 @@ def main():
             pass
     st = model_status()
     url = f"http://localhost:{CFG['port']}"
-    print(f"\n  Anglų katinas veikia:  {url}\n  Mokytojo ataskaita:    {url}/teacher\n")
+    print(f"\n  Anglų katinas veikia:  {url}\n  Mokytojo puslapis:     {url}/teacher\n")
     if st.get("api"):
         print(f"  Modelis: {CFG['model']} per API ({CFG['api_url']})" if st["installed"] else
-              "  ! API raktas neveikia – patikrink LLM_API_KEY faile .env")
+              "  ! API raktas neveikia – patikrink LLM_API_KEY")
     elif not st["ollama"]:
-        print("  ! Nėra nei API rakto (.env), nei Ollama. Žr. README.")
+        print("  ! Nėra API rakto (LLM_API_KEY) ir nėra Ollama. Žr. README.")
     elif not st["installed"]:
         print(f"  ! Modelis neįdiegtas. Paleisk:  ollama pull {CFG['model']}")
     if not st["installed"]:
         print("    (Pratimai veiks ir be modelio, bet nebus paaiškinimų ir pokalbių.)\n")
-    srv = ThreadingHTTPServer(("127.0.0.1", CFG["port"]), Handler)
+    default_host = "0.0.0.0" if os.environ.get("CODESPACES") else "127.0.0.1"
+    srv = ThreadingHTTPServer((os.environ.get("HOST", default_host), CFG["port"]), Handler)
     if CFG["open_browser"]:
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()
     try:

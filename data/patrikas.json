@@ -1,0 +1,476 @@
+{
+ "name": "Patrikas",
+ "slug": "patrikas",
+ "created": "2026-11-05T21:09:35",
+ "cat_name": "Jerris",
+ "interests": "arkliai, piesimas",
+ "diagnostic_done": true,
+ "level": "A1 (pradžia)",
+ "diagnostic": {
+  "date": "2026-11-05T21:11:12",
+  "blocks": [
+   {
+    "level": "A1",
+    "wrong": 5,
+    "passed": false
+   }
+  ],
+  "results": [
+   {
+    "topic": "a1_colors",
+    "q": "geltona",
+    "ans": "yells",
+    "ok": true
+   },
+   {
+    "topic": "a1_animals",
+    "q": "arklys",
+    "ans": "hors",
+    "ok": true
+   },
+   {
+    "topic": "a1_be",
+    "q": "I ___ 13 years old.",
+    "ans": "am",
+    "ok": true
+   },
+   {
+    "topic": "a1_possessive_adj",
+    "q": "He is my father. ___ name is Tom.",
+    "ans": "nes",
+    "ok": false
+   },
+   {
+    "topic": "a1_articles",
+    "q": "It is ___ apple.",
+    "ans": "a",
+    "ok": false
+   },
+   {
+    "topic": "a1_plurals",
+    "q": "one cat, two ___",
+    "ans": "cat",
+    "ok": false
+   },
+   {
+    "topic": "a1_have",
+    "q": "She ___ a dog.",
+    "ans": "has",
+    "ok": true
+   },
+   {
+    "topic": "a1_present_simple",
+    "q": "My sister ___ music.",
+    "ans": "like",
+    "ok": false
+   },
+   {
+    "topic": "a1_present_neg_q",
+    "q": "___ you like pizza?",
+    "ans": "does",
+    "ok": false
+   }
+  ]
+ },
+ "topics": {
+  "a1_colors": {
+   "score": 0.782,
+   "tries": 8,
+   "correct": 6,
+   "last": "2026-11-05T21:13:03"
+  },
+  "a1_animals": {
+   "score": 0.5,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_be": {
+   "score": 0.5,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_possessive_adj": {
+   "score": 0.16,
+   "tries": 1,
+   "correct": 0,
+   "last": "2026-11-05T21:12:33"
+  },
+  "a1_family": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_articles": {
+   "score": 0.2,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_plurals": {
+   "score": 0.128,
+   "tries": 2,
+   "correct": 0,
+   "last": "2026-11-05T21:13:06"
+  },
+  "a1_numbers": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_have": {
+   "score": 0.5,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_this_that": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_possessive_s": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_food": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_present_simple": {
+   "score": 0.2,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_present_neg_q": {
+   "score": 0.2,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_school": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_can": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_there_is": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_prepositions": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_days": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_present_continuous": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_was_were": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_past_regular": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_past_irregular": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_past_neg_q": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_object_pronouns": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_comparatives": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_superlatives": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_some_any": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_going_to": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_frequency": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_past_continuous": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_present_perfect": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_will": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_first_conditional": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_should_must": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  }
+ },
+ "mistakes": [
+  {
+   "key": "a1_possessive_adj|He is my father. ___ name is Tom.",
+   "item": {
+    "type": "choose",
+    "q": "He is my father. ___ name is Tom.",
+    "opts": [
+     "He",
+     "His",
+     "Her"
+    ],
+    "a": [
+     "His"
+    ],
+    "topic": "a1_possessive_adj"
+   },
+   "n": 2
+  },
+  {
+   "key": "a1_articles|It is ___ apple.",
+   "item": {
+    "type": "choose",
+    "q": "It is ___ apple.",
+    "opts": [
+     "a",
+     "an"
+    ],
+    "a": [
+     "an"
+    ],
+    "topic": "a1_articles"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_plurals|one cat, two ___",
+   "item": {
+    "type": "choose",
+    "q": "one cat, two ___",
+    "opts": [
+     "cat",
+     "cats"
+    ],
+    "a": [
+     "cats"
+    ],
+    "topic": "a1_plurals"
+   },
+   "n": 3
+  },
+  {
+   "key": "a1_present_simple|My sister ___ music.",
+   "item": {
+    "type": "choose",
+    "q": "My sister ___ music.",
+    "opts": [
+     "like",
+     "likes"
+    ],
+    "a": [
+     "likes"
+    ],
+    "topic": "a1_present_simple"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_present_neg_q|___ you like pizza?",
+   "item": {
+    "type": "choose",
+    "q": "___ you like pizza?",
+    "opts": [
+     "Do",
+     "Does",
+     "Are"
+    ],
+    "a": [
+     "Do"
+    ],
+    "topic": "a1_present_neg_q"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_colors|The sky is ___.",
+   "item": {
+    "type": "choose",
+    "q": "The sky is ___.",
+    "opts": [
+     "blue",
+     "pink",
+     "black"
+    ],
+    "a": [
+     "blue"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_colors|Grass is ___.",
+   "item": {
+    "type": "choose",
+    "q": "Grass is ___.",
+    "opts": [
+     "red",
+     "green",
+     "white"
+    ],
+    "a": [
+     "green"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  }
+ ],
+ "log": [
+  {
+   "date": "2026-11-05T21:11:59",
+   "topic": "a1_colors",
+   "q": "The sky is ___.",
+   "ans": "pink",
+   "correct": "blue"
+  },
+  {
+   "date": "2026-11-05T21:12:11",
+   "topic": "a1_colors",
+   "q": "Grass is ___.",
+   "ans": "white",
+   "correct": "green"
+  },
+  {
+   "date": "2026-11-05T21:12:30",
+   "topic": "a1_plurals",
+   "q": "one cat, two ___",
+   "ans": "cat",
+   "correct": "cats"
+  },
+  {
+   "date": "2026-11-05T21:12:33",
+   "topic": "a1_possessive_adj",
+   "q": "He is my father. ___ name is Tom.",
+   "ans": "her",
+   "correct": "His"
+  },
+  {
+   "date": "2026-11-05T21:13:06",
+   "topic": "a1_plurals",
+   "q": "one cat, two ___",
+   "ans": "cat",
+   "correct": "cats"
+  },
+  {
+   "date": "2026-11-05T21:13:25",
+   "topic": "a1_colors",
+   "q": "(pokalbis)",
+   "ans": "colour is cat",
+   "correct": "The cat is brown."
+  }
+ ],
+ "sessions": [
+  {
+   "date": "2026-11-05T21:11:12",
+   "type": "diagnostika",
+   "topic": "-",
+   "correct": 4,
+   "total": 9
+  },
+  {
+   "date": "2026-11-05T21:13:32",
+   "type": "pamoka",
+   "topic": "Spalvos",
+   "correct": 4,
+   "total": 8
+  }
+ ],
+ "alerts": [],
+ "stars": 10,
+ "cat": {
+  "full": 100,
+  "t": 1793914687.4665804,
+  "fed": 2
+ },
+ "plan": {
+  "topics": [],
+  "note": ""
+ }
+}

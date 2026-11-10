@@ -1,54 +1,44 @@
 <!doctype html>
 <html lang="lt">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Anglų katinas</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>William</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="window">
-  <div class="titlebar">
-    <span class="tb-left">—&nbsp;&nbsp;▢</span>
-    <span class="tb-title" id="tbTitle">~ : fish — anglų katinas</span>
-    <span class="tb-right">✕</span>
+  <header class="mascot">
+    <button id="teacher-btn" class="teacher-btn" type="button">⚙</button>
+    <p id="score" class="score">0/5</p>
+    <p id="bubble" class="bubble"></p>
+    <pre id="cat" title="Click me!"></pre>
+    <p class="name">William</p>
+    <button id="flip-test" class="test-btn" type="button">🐱 Salto!</button>
+    <div class="menus">
+      <select id="course" aria-label="Course"></select>
+      <select id="lesson" aria-label="Lesson"></select>
+    </div>
+  </header>
+
+  <main id="chat"></main>
+
+  <!-- Helper buttons for the exercises -->
+  <div id="helpers" class="helpers" hidden>
+    <button id="hint-btn" type="button"></button>
+    <button id="listen-btn" type="button"></button>
+    <button id="dontknow-btn" type="button"></button>
   </div>
 
-  <div class="main">
-    <section class="term" id="term">
-      <div id="out" aria-live="polite"></div>
-      <form id="form" class="promptline" autocomplete="off">
-        <span id="ps1" class="ps1">svečias@anglu&nbsp;~&gt;</span>
-        <input id="inp" type="text" spellcheck="false" autocapitalize="off" aria-label="Atsakymas">
-      </form>
-    </section>
+  <form id="form">
+    <input id="input" placeholder="Write to William…" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="300">
+    <button id="send">Send</button>
+  </form>
 
-    <aside class="side">
-      <div class="stage" id="stage">
-        <pre class="bubble" id="bubble"></pre>
-        <div class="catwrap" id="catwrap"><pre class="cat" id="cat"></pre></div>
-        <pre class="fish" id="fish">&gt;&lt;(((º&gt;</pre>
-        <div class="hearts" id="hearts"></div>
-      </div>
+  <!-- Teacher settings: filled in by chat.js -->
+  <dialog id="teacher">
+    <form id="teacher-form" method="dialog"></form>
+  </dialog>
 
-      <div class="buttons">
-        <button id="flipBtn" type="button">[ Salto ]</button>
-        <button id="feedBtn" type="button">[ Pamaitinti ]</button>
-      </div>
-
-      <pre class="stats" id="stats"></pre>
-
-      <div class="tools">
-        <button id="fontDown" type="button" title="Mažesnės raidės">A-</button>
-        <button id="fontUp" type="button" title="Didesnės raidės">A+</button>
-        <button id="animBtn" type="button" title="Rašymo animacija">rašymas: įj.</button>
-        <button id="voiceBtn" type="button" title="Automatiškai skaityti angliškai">balsas: išj.</button>
-      </div>
-      <a class="teacher" href="/teacher" target="_blank">mokytojui ↗</a>
-    </aside>
-  </div>
-</div>
-<script src="app.js"></script>
+  <script src="chat.js"></script>
 </body>
 </html>

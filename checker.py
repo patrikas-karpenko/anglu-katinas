@@ -1,34 +1,83 @@
-"""Answer checking. Forgiving about capitals, punctuation, missing apostrophes
-and contractions; strict about the actual grammar point."""
-import random
+# checker.py – checks the student's answer with code, not with the model.
+#
+# Two steps:
+#   1. CONTENT: are the words right? (we ignore capitals and punctuation here,
+#      and treat "I'm" and "I am" as the same)
+#   2. FORM: if the words are right, are the capitals, the end punctuation and
+#      the apostrophes right too? (only when the teacher has "strict" switched on)
+# If the words are not right, we decide if it is a small SPELLING slip (freindly)
+# or a real mistake (like / likes, is / are), which William then explains.
 import re
 
-CONTRACTIONS = [
-    (r"\bcan't\b", "cannot"), (r"\bcan not\b", "cannot"), (r"\bwon't\b", "will not"),
-    (r"\bmustn't\b", "must not"), (r"n't\b", " not"), (r"\bi'm\b", "i am"), (r"'re\b", " are"),
-    (r"'ll\b", " will"), (r"'ve\b", " have"),
-]
+END = (".", "?", "!")
+WORD = re.compile(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*|['’][a-z]+")
 
-DONT_KNOW = {"nezinau", "nežinau", "?", "??", "nzn", "i don't know", "i dont know", "idk",
-             "dont know", "don't know", "praleisti", "skip", "-"}
+# ---- contractions: "I'm" = "I am", "don't" = "do not" -------------------------
+NOT_FORMS = {"can't": ["can", "not"], "cannot": ["can", "not"], "won't": ["will", "not"]}
+PRONOUN_IS = {"he", "she", "it", "that", "what", "there", "where", "who", "here", "how"}
+SHORT = {"'m": ["am"], "'re": ["are"], "'s": ["is"], "'ll": ["will"], "'ve": ["have"], "'d": ["would"]}
+# the same words written without the apostrophe (a form mistake, not a content mistake)
+NO_APOSTROPHE = {
+    "im": "I'm", "dont": "don't", "doesnt": "doesn't", "didnt": "didn't", "isnt": "isn't", "arent": "aren't",
+    "wasnt": "wasn't", "werent": "weren't", "havent": "haven't", "hasnt": "hasn't", "shouldnt": "shouldn't",
+    "mustnt": "mustn't", "couldnt": "couldn't", "wouldnt": "wouldn't", "cant": "can't", "wont": "won't",
+    "youre": "you're", "theyre": "they're", "thats": "that's", "whats": "what's", "theres": "there's",
+    "ive": "I've", "youve": "you've", "weve": "we've", "theyve": "they've", "youll": "you'll",
+    "theyll": "they'll", "hes": "he's", "shes": "she's",
+}
+# British and American spellings both count
+SAME = {"color": "colour", "favorite": "favourite", "yogurt": "yoghurt", "traveled": "travelled",
+        "center": "centre", "mom": "mum", "gray": "grey", "theater": "theatre", "meter": "metre"}
+NUMBERS = {str(i): w for i, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen "
+    "sixteen seventeen eighteen nineteen twenty".split())}
 
-LETTERS = "abcd"
+
+def expand(token):
+    """One lower-case word -> the words it really means: "don't" -> ["do", "not"]."""
+    if token in NOT_FORMS:
+        return NOT_FORMS[token]
+    if token in SHORT:
+        return SHORT[token]
+    if token == "let's":
+        return ["let", "us"]
+    if token.endswith("n't"):
+        return [token[:-3], "not"]
+    for end, full in (("'m", "am"), ("'re", "are"), ("'ll", "will"), ("'ve", "have"), ("'d", "would")):
+        if token.endswith(end):
+            return [token[: -len(end)], full]
+    if token.endswith("'s") and token[:-2] in PRONOUN_IS:
+        return [token[:-2], "is"]
+    return [token]
 
 
-def norm(s):
-    s = (s or "").lower().strip()
-    for a, b in (("’", "'"), ("‘", "'"), ("`", "'"), ("´", "'")):
-        s = s.replace(a, b)
-    s = re.sub(r"[^\w\s']", " ", s)
-    s = re.sub(r"\s+", " ", s).strip()
-    for pat, rep in CONTRACTIONS:
-        s = re.sub(pat, rep, s)
-    return re.sub(r"\s+", " ", s).strip()
+def content(text):
+    """The words of an answer, without capitals, punctuation or contractions.
+    Returns (words, contractions the student wrote without an apostrophe)."""
+    text = text.replace("’", "'").replace("‘", "'").replace("`", "'").lower()
+    text = re.sub(r"\b(he|she|it|who|what|there|that)'s got\b", r"\1 has got", text)
+    words, missing = [], []
+    for token in WORD.findall(text):
+        if token in NO_APOSTROPHE:
+            missing.append(NO_APOSTROPHE[token])
+            token = NO_APOSTROPHE[token].lower()
+        for w in expand(token):
+            w = SAME.get(w, NUMBERS.get(w, w))
+            words.append(w.replace("-", ""))      # t-shirt = tshirt, but we note it below
+    return words, missing
+
+
+# ---- spelling or grammar? ------------------------------------------------------
+GROUPS = [{"am", "is", "are", "was", "were", "be"}, {"a", "an", "the"}, {"do", "does", "did"},
+          {"have", "has", "had"}, {"this", "that", "these", "those"}, {"much", "many"}, {"some", "any"},
+          {"in", "on", "at"}, {"i", "me", "my", "mine"}, {"he", "him", "his"}, {"she", "her", "hers"},
+          {"we", "us", "our", "ours"}, {"they", "them", "their", "theirs"}, {"you", "your", "yours"},
+          {"it", "its"}, {"more", "most"}, {"than", "then", "as"}, {"must", "should", "can", "will"},
+          {"always", "usually", "often", "sometimes", "never"}]
 
 
 def lev(a, b):
-    if a == b:
-        return 0
+    """How many letters must change to turn a into b."""
     prev = list(range(len(b) + 1))
     for i, ca in enumerate(a, 1):
         cur = [i]
@@ -38,107 +87,138 @@ def lev(a, b):
     return prev[-1]
 
 
-def prepare(item):
-    """Copy an exercise and add what the screen needs (shuffled word order)."""
-    it = dict(item)
-    if it["type"] == "order":
-        words = it["q"].split()
-        shuffled = words[:]
-        for _ in range(20):
-            random.shuffle(shuffled)
-            if shuffled != words:
-                break
-        it["display"] = " / ".join(shuffled)
-    return it
-
-
-def correct_text(it):
-    """The full correct answer, nicely written, to show the student."""
-    a = it["a"][0]
-    if it["type"] == "fill":
-        q = it["q"].split(" (")[0] if it["q"].endswith(")") else it["q"]
-        i = q.index("___")
-        before = q[:i].rstrip()
-        if not before or before.endswith((".", "!", "?")):
-            a = a[0].upper() + a[1:]
-        return q.replace("___", a, 1)
-    if it["type"] == "order":
-        return a + ("?" if a.split()[0] in ("Do", "Does", "Did", "Can", "Is", "Are", "Have", "Will") else ".")
-    if it["type"] == "translate" and it.get("topic", "").endswith("days"):
-        return a.capitalize()
-    return a
-
-
-def student_full(it, ans):
-    """If the student typed the whole sentence for a fill item, cut the gap out."""
-    if it["type"] != "fill":
-        return ans
-    q = it["q"].split(" (")[0] if it["q"].endswith(")") else it["q"]
-    pre, post = q.split("___", 1)
-    n, p1, p2 = norm(ans), norm(pre), norm(post)
-    if p1 and n.startswith(p1 + " ") and (not p2 or n.endswith(" " + p2)):
-        mid = n[len(p1):]
-        if p2:
-            mid = mid[: len(mid) - len(p2)]
-        return mid.strip()
-    if not p1 and p2 and n.endswith(" " + p2):
-        return n[: len(n) - len(p2)].strip()
-    return ans
-
-
-def check(it, ans):
-    """Returns (verdict, tip). verdict: ok | near | wrong | dontknow."""
-    raw = (ans or "").strip()
-    if norm(raw) in DONT_KNOW or raw.lower() in DONT_KNOW:
-        return "dontknow", None
-
-    answers = [norm(a) for a in it["a"]]
-    if it["type"] == "choose":
-        r = norm(raw).rstrip(")")
-        if len(r) == 1 and r in LETTERS[: len(it["opts"])]:
-            raw = it["opts"][LETTERS.index(r)]
-        elif r.isdigit() and 1 <= int(r) <= len(it["opts"]):
-            raw = it["opts"][int(r) - 1]
-
-    raw = student_full(it, raw)
-    n = norm(raw)
-    if n in answers:
-        return "ok", None
-
-    flat = _flat(raw)
-    for a in it["a"]:
-        if _flat(a) == flat:
-            return "ok", f"Nepamiršk apostrofo: {a}"
-
-    if it["type"] in ("fill", "translate", "order"):
-        for a in answers:
-            limit = 2 if len(a) >= 5 else (1 if len(a) >= 3 else 0)
-            # only a spelling slip if it's not just another option/word form
-            if 0 < lev(n, a) <= limit and not _is_grammar_slip(n, a):
-                return "near", None
-    return "wrong", None
-
-
-def _flat(s):
-    s = (s or "").lower().replace("’", "'").replace("'", "")
-    return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", s)).strip()
-
-
-def _stems(w):
-    """Possible (stem, ending) splits of a word: bigger -> (big, er), (bigg, er) ..."""
+def stems(w):
+    """bigger -> {(bigger, ''), (big, 'er'), (bigg, 'er'), ...}"""
     out = {(w, "")}
-    for end in ("est", "ing", "er", "ed", "es", "s", "d"):
+    for end in ("iest", "ier", "ies", "ied", "est", "ing", "er", "ed", "es", "ly", "s", "d"):
         if w.endswith(end) and len(w) - len(end) >= 2:
             base = w[: -len(end)]
-            out |= {(base, end), (base + "e", end)}
+            out |= {(base, end), (base + "e", end), (base + "y", end)}
             if len(base) > 2 and base[-1] == base[-2]:
                 out.add((base[:-1], end))
     return out
 
 
-def _is_grammar_slip(n, a):
-    """like/likes, bigger/biggest, run/running are grammar mistakes, not spelling slips
-    (same word, different ending). biger/bigger is a spelling slip (same ending)."""
-    if {n, a} in ({"is", "as"}, {"an", "a"}, {"was", "were"}):
+def grammar_slip(a, b):
+    """like/likes, big/biggest, is/are: the same word in another form = a grammar mistake."""
+    if any(a in g and b in g for g in GROUPS):
         return True
-    return any(s1 == s2 and e1 != e2 for s1, e1 in _stems(n) for s2, e2 in _stems(a))
+    return any(s1 == s2 and e1 != e2 for s1, e1 in stems(a) for s2, e2 in stems(b))
+
+
+def spelling_slip(a, b):
+    if grammar_slip(a, b):
+        return False
+    limit = 1 if len(b) <= 4 else 2 if len(b) <= 8 else 3
+    return 0 < lev(a, b) <= limit
+
+
+# ---- form: capitals, end punctuation, apostrophes ----------------------------------
+def form_issues(answer, target, sentence, blank_at_start=False):
+    """What is wrong with the capitals and punctuation, when the words themselves are right."""
+    issues, notes = [], []
+    a = answer.strip()
+    target_words = WORD.findall(target)
+    answer_words = WORD.findall(a)
+
+    first = next((c for c in a if c.isalpha()), "")
+    target_first = next((c for c in target if c.isalpha()), "")
+    if (sentence or blank_at_start) and target_first.isupper() and first.islower():
+        issues.append({"code": "start_capital"})
+    if any(w == "i" or w.startswith(("i'", "i’")) for w in answer_words):
+        issues.append({"code": "i_capital"})
+    # names, countries, months, TV ... : every capital letter in the answer key must be there
+    lowered = {w.lower(): w for w in answer_words}
+    start = 1 if sentence or blank_at_start else 0   # the first word was checked above
+    for w in target_words[start:]:
+        if w[0].isupper() and w not in ("I",) and not w.startswith("I'"):
+            written = lowered.get(w.lower())
+            if written and written != w and not (written[0].isupper() and not w.isupper()):
+                issues.append({"code": "acronym" if w.isupper() and len(w) > 1 else "proper_capital", "w": w})
+
+    if sentence:
+        t_end = target.rstrip()[-1] if target.rstrip().endswith(END) else ""
+        a_end = a[-1] if a.endswith(END) else ""
+        if t_end == "?" and a_end != "?":
+            issues.append({"code": "end_question" if not a_end else "is_question"})
+        elif t_end in (".", "!") and not a_end:
+            issues.append({"code": "end_dot"})
+        elif t_end in (".", "!") and a_end == "?":
+            issues.append({"code": "not_question"})
+        # commas and punctuation inside the answer: a gentle note, not a mistake
+        inner_t = len(re.findall(r"[,.?!]", target.rstrip()[:-1]))
+        inner_a = len(re.findall(r"[,.?!]", a[:-1] if a_end else a))
+        if inner_a < inner_t:
+            notes.append({"code": "inner_punct", "a": target})
+    return issues, notes
+
+
+# ---- the main function ------------------------------------------------------------
+def strip_hint(q):
+    """'I ___ swim. (moku)' -> 'I ___ swim.'"""
+    return q.rsplit(" (", 1)[0] if q.endswith(")") else q
+
+
+def fill_in(q, answer):
+    return strip_hint(q).replace("___", answer, 1)
+
+
+def expected(item):
+    """The correct answer to show the student (a whole sentence for fill-in-the-blank)."""
+    if item["type"] == "fill":
+        return fill_in(item["q"], item["a"][0])
+    return item["a"][0]
+
+
+def check(item, answer, strict=True):
+    """Returns {"result": right | form | spelling | wrong, "expected", "issues", "notes", "word"}."""
+    answer = (answer or "").strip()
+    out = {"result": "wrong", "expected": expected(item), "issues": [], "notes": [], "word": ""}
+    if not answer:
+        return out
+
+    # What do we compare with?  (target text, is it a whole sentence?, was the blank at the start?)
+    targets = []
+    if item["type"] == "fill":
+        sentence = strip_hint(item["q"])
+        at_start = sentence.startswith("___")
+        whole = len(content(answer)[0]) >= max(3, len(content(sentence.replace("___", ""))[0]))
+        for a in item["a"]:
+            if whole:
+                targets.append((fill_in(item["q"], a), True, False, a))
+            else:
+                targets.append((a, False, at_start, a))
+    else:
+        for a in item["a"] + item.get("also", []):
+            targets.append((a, a.rstrip().endswith(END), False, a))
+
+    words, missing = content(answer)
+
+    # 1. CONTENT: same words as one of the answers?
+    for target, sentence, at_start, key in targets:
+        if words == content(target)[0]:
+            issues, notes = form_issues(answer, target, sentence, at_start) if strict else ([], [])
+            if strict and missing:
+                issues.append({"code": "apostrophe", "w": ", ".join(dict.fromkeys(missing))})
+            if strict and "-" in target and "-" not in answer:      # T-shirt written as tshirt
+                notes.append({"code": "hyphen", "a": target})
+            if key in item.get("also", []):
+                notes.append({"code": "also_right", "a": item["a"][0]})
+            out.update(result="form" if issues else "right", issues=issues, notes=notes)
+            if not issues and item["type"] == "fill" and not sentence:
+                out["expected"] = fill_in(item["q"], key)
+            return out
+
+    # 2. Not the same words: a spelling slip, or a real mistake?
+    for target, *_ in targets:
+        t_words = content(target)[0]
+        if len(words) == len(t_words):
+            diff = [(a, b) for a, b in zip(words, t_words) if a != b]
+            if 0 < len(diff) <= 2 and all(spelling_slip(a, b) for a, b in diff):
+                original = {w.lower().replace("-", ""): w for w in WORD.findall(target)}
+                out.update(result="spelling", word=", ".join(original.get(b, b) for _, b in diff))
+                return out
+        if "".join(words) == "".join(t_words):          # "ice hockey" written as "icehockey"
+            out.update(result="spelling", word=target)
+            return out
+    return out

@@ -1,0 +1,655 @@
+{
+ "name": "Thomas",
+ "slug": "thomas",
+ "created": "2026-11-06T06:34:19",
+ "interests": "Present simple",
+ "diagnostic_done": true,
+ "level": "A1",
+ "diagnostic": {
+  "date": "2026-11-06T06:36:44",
+  "blocks": [
+   {
+    "level": "A1",
+    "wrong": 3,
+    "passed": true
+   },
+   {
+    "level": "A2",
+    "wrong": 4,
+    "passed": false
+   }
+  ],
+  "results": [
+   {
+    "topic": "a1_colors",
+    "q": "geltona",
+    "ans": "black",
+    "ok": false
+   },
+   {
+    "topic": "a1_animals",
+    "q": "arklys",
+    "ans": "donkey",
+    "ok": false
+   },
+   {
+    "topic": "a1_be",
+    "q": "I ___ 13 years old.",
+    "ans": "am",
+    "ok": true
+   },
+   {
+    "topic": "a1_possessive_adj",
+    "q": "He is my father. ___ name is Tom.",
+    "ans": "His",
+    "ok": true
+   },
+   {
+    "topic": "a1_articles",
+    "q": "It is ___ apple.",
+    "ans": "an",
+    "ok": true
+   },
+   {
+    "topic": "a1_plurals",
+    "q": "one cat, two ___",
+    "ans": "cats",
+    "ok": true
+   },
+   {
+    "topic": "a1_have",
+    "q": "She ___ a dog.",
+    "ans": "has",
+    "ok": true
+   },
+   {
+    "topic": "a1_present_simple",
+    "q": "My sister ___ music.",
+    "ans": "likes",
+    "ok": true
+   },
+   {
+    "topic": "a1_present_neg_q",
+    "q": "___ you like pizza?",
+    "ans": "DOes",
+    "ok": false
+   },
+   {
+    "topic": "a1_can",
+    "q": "I can ___.",
+    "ans": "a",
+    "ok": true
+   },
+   {
+    "topic": "a1_there_is",
+    "q": "There ___ three cats.",
+    "ans": "b",
+    "ok": true
+   },
+   {
+    "topic": "a1_prepositions",
+    "q": "The cat is ___ the box. (viduje)",
+    "ans": "a",
+    "ok": true
+   },
+   {
+    "topic": "a2_present_continuous",
+    "q": "Look! She ___ now.",
+    "ans": "b",
+    "ok": true
+   },
+   {
+    "topic": "a2_was_were",
+    "q": "We ___ at home yesterday.",
+    "ans": "a",
+    "ok": false
+   },
+   {
+    "topic": "a2_past_regular",
+    "q": "Yesterday I ___ Roblox. (play)",
+    "ans": "played",
+    "ok": true
+   },
+   {
+    "topic": "a2_past_irregular",
+    "q": "Yesterday we ___ to the zoo.",
+    "ans": "b",
+    "ok": true
+   },
+   {
+    "topic": "a2_past_neg_q",
+    "q": "___ you see the film yesterday?",
+    "ans": "a",
+    "ok": false
+   },
+   {
+    "topic": "a2_comparatives",
+    "q": "A horse is ___ than a cat.",
+    "ans": "a",
+    "ok": false
+   },
+   {
+    "topic": "a2_superlatives",
+    "q": "It is ___ day of the year!",
+    "ans": "b",
+    "ok": false
+   }
+  ]
+ },
+ "topics": {
+  "a1_colors": {
+   "score": 0.484,
+   "tries": 13,
+   "correct": 5,
+   "last": "2026-11-06T09:57:02"
+  },
+  "a1_animals": {
+   "score": 0.2,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_be": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_possessive_adj": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_family": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_articles": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_plurals": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_numbers": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_have": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_this_that": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_possessive_s": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_food": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_present_simple": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_present_neg_q": {
+   "score": 0.2,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_school": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_can": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_there_is": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_prepositions": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a1_days": {
+   "score": 0.85,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_present_continuous": {
+   "score": 0.5,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_was_were": {
+   "score": 0.2,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_past_regular": {
+   "score": 0.5,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_past_irregular": {
+   "score": 0.5,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_past_neg_q": {
+   "score": 0.16,
+   "tries": 1,
+   "correct": 0,
+   "last": "2026-11-06T09:57:16"
+  },
+  "a2_object_pronouns": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_comparatives": {
+   "score": 0.36,
+   "tries": 1,
+   "correct": 1,
+   "last": "2026-11-06T06:39:57"
+  },
+  "a2_superlatives": {
+   "score": 0.16,
+   "tries": 1,
+   "correct": 0,
+   "last": "2026-11-06T06:40:08"
+  },
+  "a2_some_any": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_going_to": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "a2_frequency": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_past_continuous": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_present_perfect": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_will": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_first_conditional": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  },
+  "b1_should_must": {
+   "score": 0.0,
+   "tries": 0,
+   "correct": 0,
+   "last": null
+  }
+ },
+ "mistakes": [
+  {
+   "key": "a1_colors|geltona",
+   "item": {
+    "type": "translate",
+    "q": "geltona",
+    "a": [
+     "yellow"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_animals|arklys",
+   "item": {
+    "type": "translate",
+    "q": "arklys",
+    "a": [
+     "horse"
+    ],
+    "topic": "a1_animals"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_present_neg_q|___ you like pizza?",
+   "item": {
+    "type": "choose",
+    "q": "___ you like pizza?",
+    "opts": [
+     "Do",
+     "Does",
+     "Are"
+    ],
+    "a": [
+     "Do"
+    ],
+    "topic": "a1_present_neg_q"
+   },
+   "n": 1
+  },
+  {
+   "key": "a2_was_were|We ___ at home yesterday.",
+   "item": {
+    "type": "choose",
+    "q": "We ___ at home yesterday.",
+    "opts": [
+     "was",
+     "were"
+    ],
+    "a": [
+     "were"
+    ],
+    "topic": "a2_was_were"
+   },
+   "n": 1
+  },
+  {
+   "key": "a2_past_neg_q|___ you see the film yesterday?",
+   "item": {
+    "type": "choose",
+    "q": "___ you see the film yesterday?",
+    "opts": [
+     "Do",
+     "Did",
+     "Was"
+    ],
+    "a": [
+     "Did"
+    ],
+    "topic": "a2_past_neg_q"
+   },
+   "n": 2
+  },
+  {
+   "key": "a2_superlatives|It is ___ day of the year!",
+   "item": {
+    "type": "choose",
+    "q": "It is ___ day of the year!",
+    "opts": [
+     "the best",
+     "the better",
+     "the good"
+    ],
+    "a": [
+     "the best"
+    ],
+    "topic": "a2_superlatives"
+   },
+   "n": 2
+  },
+  {
+   "key": "a1_colors|rožinė",
+   "item": {
+    "type": "translate",
+    "q": "rožinė",
+    "a": [
+     "pink"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 3
+  },
+  {
+   "key": "a1_colors|The sky is ___.",
+   "item": {
+    "type": "choose",
+    "q": "The sky is ___.",
+    "opts": [
+     "blue",
+     "pink",
+     "black"
+    ],
+    "a": [
+     "blue"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_colors|ruda",
+   "item": {
+    "type": "translate",
+    "q": "ruda",
+    "a": [
+     "brown"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_colors|raudona",
+   "item": {
+    "type": "translate",
+    "q": "raudona",
+    "a": [
+     "red"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_colors|Grass is ___.",
+   "item": {
+    "type": "choose",
+    "q": "Grass is ___.",
+    "opts": [
+     "red",
+     "green",
+     "white"
+    ],
+    "a": [
+     "green"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  },
+  {
+   "key": "a1_colors|violetinė",
+   "item": {
+    "type": "translate",
+    "q": "violetinė",
+    "a": [
+     "purple"
+    ],
+    "topic": "a1_colors"
+   },
+   "n": 1
+  }
+ ],
+ "log": [
+  {
+   "date": "2026-11-06T06:38:09",
+   "topic": "a1_colors",
+   "q": "rožinė",
+   "ans": "My cat is negro.",
+   "correct": "My cat is pink."
+  },
+  {
+   "date": "2026-11-06T06:38:36",
+   "topic": "a1_colors",
+   "q": "The sky is ___.",
+   "ans": "pink",
+   "correct": "The sky is blue."
+  },
+  {
+   "date": "2026-11-06T06:38:56",
+   "topic": "a1_colors",
+   "q": "ruda",
+   "ans": "ginger",
+   "correct": "My cat is brown."
+  },
+  {
+   "date": "2026-11-06T06:39:46",
+   "topic": "a1_colors",
+   "q": "raudona",
+   "ans": "Admin reset session",
+   "correct": "My cat is red."
+  },
+  {
+   "date": "2026-11-06T06:40:08",
+   "topic": "a2_superlatives",
+   "q": "It is ___ day of the year!",
+   "ans": "nutraukti sesija",
+   "correct": "It is the best day of the year!"
+  },
+  {
+   "date": "2026-11-06T06:40:42",
+   "topic": "a1_colors",
+   "q": "rožinė",
+   "ans": "As ismokau pamoka. Noriu mokytis gyvunus",
+   "correct": "My cat is pink."
+  },
+  {
+   "date": "2026-11-06T09:50:45",
+   "topic": "a1_colors",
+   "q": "Grass is ___.",
+   "ans": "grass is red",
+   "correct": "Grass is green."
+  },
+  {
+   "date": "2026-11-06T09:56:06",
+   "topic": "a1_colors",
+   "q": "violetinė",
+   "ans": "my cats is brown",
+   "correct": "My cat is purple."
+  },
+  {
+   "date": "2026-11-06T09:56:29",
+   "topic": "a1_colors",
+   "q": "rožinė",
+   "ans": "my cat is purple.",
+   "correct": "My cat is pink."
+  },
+  {
+   "date": "2026-11-06T09:57:16",
+   "topic": "a2_past_neg_q",
+   "q": "___ you see the film yesterday?",
+   "ans": "Do you see the film yesterday?",
+   "correct": "Did you see the film yesterday?"
+  }
+ ],
+ "sessions": [
+  {
+   "date": "2026-11-06T06:36:44",
+   "type": "diagnostika",
+   "topic": "-",
+   "correct": 12,
+   "total": 19
+  },
+  {
+   "date": "2026-11-06T06:40:47",
+   "type": "pamoka",
+   "topic": "Spalvos",
+   "correct": 3,
+   "total": 8
+  },
+  {
+   "date": "2026-11-06T06:41:10",
+   "type": "pamoka",
+   "topic": "Spalvos",
+   "correct": 0,
+   "total": 0
+  },
+  {
+   "date": "2026-11-06T06:41:24",
+   "type": "pamoka",
+   "topic": "Spalvos",
+   "correct": 0,
+   "total": 0
+  }
+ ],
+ "alerts": [
+  {
+   "date": "2026-11-06T06:34:32",
+   "type": "harmful",
+   "text": "Ginklai"
+  },
+  {
+   "date": "2026-11-06T06:39:07",
+   "type": "harmful",
+   "text": "Grass is weed."
+  },
+  {
+   "date": "2026-11-06T06:39:51",
+   "type": "harmful",
+   "text": "killroy"
+  }
+ ],
+ "plan": {
+  "topics": [],
+  "note": ""
+ },
+ "stars": 22,
+ "cat": {
+  "full": 100,
+  "t": 1793958829.2002938,
+  "fed": 3
+ }
+}

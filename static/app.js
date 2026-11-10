@@ -10,7 +10,7 @@ const store = {
 };
 
 const state = {
-  slug: null, name: null, catName: "Murkis", busy: false,
+  slug: null, name: null, catName: "William", names: [], busy: false,
   mood: "normal", full: 70, typing: store.get("typing", true), voice: store.get("voice", false),
 };
 
@@ -185,8 +185,8 @@ const SPEAK_KINDS = new Set(["cat", "q", "ex", "fix", "ok"]);
 
 function speakable(m) {
   let t = m.t;
-  if (m.k === "fix") t = t.replace(/^Teisingai:\s*/, "");
-  if (m.k === "ok") t = t.replace(/\+1.*$/, "");
+  if (m.k === "fix") t = t.replace(/^(Teisingai|Visas sakinys):\s*/, "");
+  if (m.k === "ok") t = t.replace(/\s*(Visas sakinys!)?\s*\+\d.*$/, "");
   if (m.k === "q") {
     t = t.replace(/\([^)]*\)/g, "").replace(/_{2,}/g, " blank ");
     if (t.includes(" / ")) return null;          // word-order exercise: don't give it away
@@ -287,7 +287,7 @@ async function api(path, body) {
     });
     return await r.json();
   } catch (e) {
-    await printMsg({ k: "err", t: "Nepavyko susisiekti su programa. Ar serveris įjungtas? (python3 server.py)" });
+    await printMsg({ k: "err", t: "Nepavyko susisiekti su programa. Ar serveris įjungtas? (python server.py)" });
     return null;
   }
 }
@@ -338,7 +338,11 @@ $("form").addEventListener("submit", async (e) => {
   if (low === "pamaitinti" || low === "/feed") return feed();
   if (low === "clear" || low === "valyti") { out.innerHTML = ""; return; }
 
-  if (!state.slug) return begin(text);
+  if (low === "keisti" || low === "/switch") return switchStudent();
+  if (!state.slug) {
+    const n = parseInt(text, 10);                          // picked a number from the list
+    return begin(String(n) === text && state.names[n - 1] ? state.names[n - 1] : text);
+  }
 
   lock(true);
   thinking(true);
@@ -374,13 +378,14 @@ if ("speechSynthesis" in window) speechSynthesis.getVoices();
   face("normal");
   lock(true);
   const st = await api("/api/status");
+  if (st && st.cat) state.catName = st.cat;
   const lines = [
     "Anglų katinas 1.0  —  tty1",
-    "[ OK ] Katinėlis pabudo",
+    `[ OK ] Katinas ${state.catName} pabudo`,
     "[ OK ] Pratimai įkelti (A1–" + (st ? st.max_level : "B1") + ")",
   ];
   let warn = null;
-  if (st && st.api && !st.installed) warn = "[WARN] API raktas neveikia – veiks tik pratimai (patikrink .env)";
+  if (st && st.api && !st.installed) warn = "[WARN] API raktas neveikia – veiks tik pratimai (patikrink LLM_API_KEY)";
   else if (!st || !st.ollama) warn = "[WARN] Nėra modelio – veiks tik pratimai (be paaiškinimų)";
   else if (!st.installed) warn = `[WARN] Modelis ${st.model} neįdiegtas – veiks tik pratimai`;
   else lines.push(`[ OK ] Modelis ${st.model} paruoštas${st.api ? " (API)" : ""}`);
@@ -397,11 +402,33 @@ if ("speechSynthesis" in window) speechSynthesis.getVoices();
     div.innerHTML = `<span class="warn">${esc(warn)}</span>`;
     out.appendChild(div);
   }
+  await askName();
+})();
+
+async function askName() {
+  lock(true);
+  state.names = (await api("/api/names")) || [];
   await printMsg({ k: "sys", t: "" });
-  say("Hello! What is your name?", 0);
+  say(`Hello! I am ${state.catName}. What is your name?`, 0);
   face("happy", 1500);
-  await printMsg({ k: "cat", t: "Hello! What is your name?" });
-  await printMsg({ k: "lt", t: "Labas! Kuo tu vardu? Parašyk savo vardą ir paspausk Enter." });
+  await printMsg({ k: "cat", t: `Hello! I am ${state.catName}. What is your name?` });
+  if (state.names.length) {
+    await printMsg({ k: "lt", t: "Jau pažįstu: " + state.names.map((n, i) => `${i + 1}) ${n}`).join("   ") });
+    await printMsg({ k: "lt", t: "Parašyk savo numerį arba vardą ir paspausk Enter." });
+  } else {
+    await printMsg({ k: "lt", t: "Labas! Kuo tu vardu? Parašyk savo vardą ir paspausk Enter." });
+  }
   updateStats({ full: 70, stars: 0, level: "?", cat: state.catName });
   lock(false);
-})();
+}
+
+async function switchStudent() {
+  if (state.busy) return;
+  state.slug = null;
+  state.name = null;
+  $("ps1").textContent = ps1();
+  $("tbTitle").textContent = "~ : fish — anglų katinas";
+  out.innerHTML = "";
+  await askName();
+}
+$("switchBtn").onclick = switchStudent;
